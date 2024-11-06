@@ -6,7 +6,7 @@ string ltrim(const string&);
 string rtrim(const string&);
 
 /*
- * Complete the 'matchingStrings' function below.
+ * Complete the 'matchingStr ings' function below.
  *
  * The function is expected to return an INTEGER_ARRAY.
  * The function accepts following parameters:
