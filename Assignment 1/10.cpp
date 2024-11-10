@@ -1,10 +1,10 @@
 #include<iostream>
 #include<stack>
-#include "Node.h"
+#include "TreeNode.h"
 
 using namespace std;
 
-class ListNode{
+class ListNode{// class for linked list
 public:
     int val;
     ListNode* next;
@@ -13,7 +13,7 @@ public:
     ListNode(int x, ListNode* next) : val(x), next(next){ }
 };
 
-void display_list(ListNode* head){
+void display_list(ListNode* head){// no need to write in assignment
     while (head){
         cout << head->val << " ";
         head = head->next;
@@ -21,21 +21,21 @@ void display_list(ListNode* head){
     cout << endl;
 }
 
-void inorderTraversal(Node* node){ // Recursive inorder traversal function
+void inorderTraversal(TreeNode* node){ // no need to write in assignment
     if (node == nullptr) return;
     inorderTraversal(node->left);
     cout << node->data << " ";
     inorderTraversal(node->right);
 }
 
-void preOrderTraversal(Node* node){ // Recursive preorder traversal function
+void preOrderTraversal(TreeNode* node){ // no need to write in assignment
     if (node == nullptr) return;
     cout << node->data << " ";
     preOrderTraversal(node->left);
     preOrderTraversal(node->right);
 }
 
-ListNode* middle(ListNode* slow, ListNode* end){
+ListNode* middle(ListNode* slow, ListNode* end){// to get the middle element
     ListNode* fast = slow;
     while (fast != end && fast->next != end){
         fast = fast->next->next;
@@ -43,15 +43,15 @@ ListNode* middle(ListNode* slow, ListNode* end){
     }
     return slow;
 }
-Node* get_tree(ListNode* head, ListNode* end){
+TreeNode* get_tree(ListNode* head, ListNode* end){ // reccursive function
     if (!head) return nullptr;
-    Node* new_node = new Node(head->val);
+    TreeNode* new_node = new TreeNode(head->val);
     if (head->next == end) return new_node;
     ListNode* mid = middle(head, end);
-    new_node->data = mid->val;
-    if (head != mid)
+    new_node->data = mid->val;// middle element as root 
+    if (head != mid) // left part as left subtree
         new_node->left = get_tree(head, mid);
-    if (mid->next != end)
+    if (mid->next != end)// right part as right subtree
         new_node->right = get_tree(mid->next, end);
     return new_node;
 }
@@ -63,7 +63,7 @@ int main(){
     head->next->next->next = new ListNode(4);
     head->next->next->next->next = new ListNode(5);
     head->next->next->next->next->next = new ListNode(10);
-    Node* tree = get_tree(head, nullptr);
+    TreeNode* tree = get_tree(head, nullptr);
     cout << "list: ";
     display_list(head);
     cout << "Ineorder traversal of tree: ";

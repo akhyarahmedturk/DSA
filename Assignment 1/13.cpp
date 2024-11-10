@@ -5,10 +5,10 @@ using namespace std;
 
 int find_max(min_heap& heap){
     if (heap.is_empty()) return -12345678;
-    int MAX = INT_MIN, size = heap.vec.size();
+    int MAX = INT_MIN, size = heap.size();
     int i = size - 1;
-    // no need to check whole tree, only check leaf nodes
-    while (i >= 0 && 2 * i + 1 >= size){
+    // in min heap leaf nodes have maximum values
+    while (i >= 0 && 2 * i + 1 >= size){// no need to check whole tree, only check leaf nodes
         MAX = max(MAX, heap.vec[i]);
         i--;
     }

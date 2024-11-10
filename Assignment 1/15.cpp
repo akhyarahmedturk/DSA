@@ -1,21 +1,34 @@
 #include<iostream>
-#include"min_heap.h"
+#include"min_heap.h"// both heaps are imported from classes we have used in previous questions
 #include"max_heap.h"
 
 using namespace std;
 
+// ->We have used two heap 
+//  1) for the last half elements we are using  min heap , by using this the middle element (which is the highest element of fist half)
+//  will be on top and we can directly get it.
+//  2) for the second half elements we are using  min heap, by using this the middle element (which is the smalest element of second half)
+//  will be on top and we can directly get it.
+// ->for Each insertion we store the element based on it,s value either in max or min heap, then
+//  if the difference of size in both heaps in >1 then we rebalance then by removing top from one and adding in another heap
+// ->For each deletion we check
+//  1) if heap1 i:e max heap has >= elements as min heap then we delete the top of max heap
+//  2) else we delete from min heap
+//  for ex. if no of nodes are (max_heap=5, min_heap=4) then we delete from max heap i:e 5th element of total 9
+//  (max_heap=4, min_heap=4) then we delete from max heap i:e 4th element of total 8 (n/2)th element
+//  (max_heap=4, min_heap=5) then we delete from minx heap i:e 5th element of total 9 
 class middle_heap{
-    min_heap min_h;
-    max_heap max_h;
+    max_heap max_h;//to store the first half part
+    min_heap min_h;//to store the second half part
 public:
     void push(int val){
-        if (val > max_h.top()){
+        if (val > max_h.top()){// pushing based on value
             min_h.push(val);
         }
         else{
             max_h.push(val);
         }
-        if (max_h.size() - min_h.size() > 1){
+        if (max_h.size() - min_h.size() > 1){// balancing size
             min_h.push(max_h.top());
             max_h.pop();
         }

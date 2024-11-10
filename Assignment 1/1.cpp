@@ -1,20 +1,21 @@
 #include<iostream>
 #include<queue>
-#include "Node.h"
+#include "TreeNode.h"
+
 
 using namespace std;
 
-int full_nodes(Node* root){
+int full_nodes(TreeNode* root){
     int result = 0;
-    if (root == nullptr){ // If the tree is empty, set the new node as the root
-        return 0;
+    if (root == nullptr){
+        return 0;// no node in the tree
     }
-    queue<Node*> q; // Use a queue for level-order traversal to find the first available position
+    queue<TreeNode*> q;
     q.push(root);
     while (!q.empty()){
-        Node* current = q.front();
+        TreeNode* current = q.front();
         q.pop();
-        if (current->left && current->right){
+        if (current->left && current->right){// have both left and right childs
             result++;
             q.push(current->left);
             q.push(current->right);
@@ -25,7 +26,7 @@ int full_nodes(Node* root){
         else if (current->right){
             q.push(current->right);
         }
-        else{
+        else{// a leaf node
             result++;
         }
     }
@@ -33,12 +34,12 @@ int full_nodes(Node* root){
 }
 
 int main(){
-    Node* root = new Node(1);
-    root->left = new Node(2);
-    root->right = new Node(3);
-    root->left->left = new Node(4);
-    root->right->right = new Node(5);
-    root->right->left = new Node(6);
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->right->right = new TreeNode(5);
+    root->right->left = new TreeNode(6);
     cout << "Total full nodes are: " << full_nodes(root) << endl;
     return 0;
 }

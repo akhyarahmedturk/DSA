@@ -3,9 +3,10 @@
 #include"max_heap.h"
 using namespace std;
 
+// time complexity O(m+n)
 vector<int> mergeHeaps(vector<int> heap1, vector<int> heap2){
     heap1.insert(heap1.end(), heap2.begin(), heap2.end());// merging both vectors to create a single vector
-    for (int i = heap1.size() - 1;i >= 0;i--){// heapify the merged vector
+    for (int i = heap1.size() - 1;i >= 0;i--){// heapify_down all the nodes of the merged vector
         int j = i;
         while (2 * j + 1 < heap1.size()){
             int LC = 2 * j + 1;
