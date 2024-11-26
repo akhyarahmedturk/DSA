@@ -15,8 +15,6 @@ int full_nodes(TreeNode* root){
     else if (root->right){
         return full_nodes(root->right);
     }
-    else// leaf node
-        return 1;
 }
 
 int main(){

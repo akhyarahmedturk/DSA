@@ -26,9 +26,6 @@ int full_nodes(TreeNode* root){
         else if (current->right){
             q.push(current->right);
         }
-        else{// a leaf node
-            result++;
-        }
     }
     return result;
 }

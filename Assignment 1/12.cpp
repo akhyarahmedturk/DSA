@@ -10,12 +10,12 @@ TreeNode* removekeys(TreeNode* root, int l, int r){// reccursive function
     else if (root->data < l){// removing elements smaller than "l"
         temp = root->right;
         delete root;
-        return removekeys(temp, l, r);// this will return false so the link will be eliminated from parent
+        return removekeys(temp, l, r);
     }
     else if (root->data > r){ // removing elements greater than "r"
         temp = root->left;
         delete root;
-        return removekeys(temp, l, r);// this will return false so the link will be eliminated from parent
+        return removekeys(temp, l, r);
     }
     else{ // node is in the range so dont remove it
         root->left = removekeys(root->left, l, r);

@@ -22,11 +22,20 @@ class middle_heap{
     min_heap min_h;//to store the second half part
 public:
     void push(int val){
-        if (val > max_h.top()){// pushing based on value
-            min_h.push(val);
+        if (max_h.is_empty() && min_h.is_empty()){
+            max_h.push(val);
+        }
+        else if (!max_h.is_empty()){
+            if (val > max_h.top())
+                min_h.push(val);
+            else
+                max_h.push(val);
         }
         else{
-            max_h.push(val);
+            if (val < min_h.top())
+                max_h.push(val);
+            else
+                min_h.push(val);
         }
         if (max_h.size() - min_h.size() > 1){// balancing size
             min_h.push(max_h.top());
@@ -38,14 +47,14 @@ public:
         }
     }
     int middle(){
-        if (size() == 0) return -123456789;
+        if (is_empty()) return -123456789;
         else if (max_h.size() >= min_h.size()){//for even no. of elements return (n)/2 th element
             return max_h.top();
         }
         else return min_h.top();
     }
     void pop(){
-        if (size() == 0) return;
+        if (is_empty()) return;
         else if (max_h.size() >= min_h.size()){//for even no. of elements remove (n)/2 th element
             max_h.pop();
         }
