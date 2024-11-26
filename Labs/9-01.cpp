@@ -1,13 +1,13 @@
 #include<iostream>
 #include<stack>
-#include"Node.h"
+#include"TreeNode.h"
 using namespace std;
 
-void PreorderTraversal(Node* root){
+void PreorderTraversal(TreeNode* root){
     if (!root) return;
-    stack<Node*> st;
+    stack<TreeNode*> st;
     st.push(root);
-    Node* temp;
+    TreeNode* temp;
     while (!st.empty()){
         temp = st.top();
         st.pop();
@@ -17,18 +17,18 @@ void PreorderTraversal(Node* root){
     }
 }
 
-void PostorderTraversal(Node* root){
+void PostorderTraversal(TreeNode* root){
     if (!root) return;
-    stack<Node*> st;
-    st.push(new Node(root->data, root->left, root->right));// using deep comp so original tree remain as it is.
+    stack<TreeNode*> st;
+    st.push(new TreeNode(root->data, root->left, root->right));// using deep comp so original tree remain as it is.
     while (!st.empty()){
-        Node* temp1 = nullptr, * temp2 = nullptr;
+        TreeNode* temp1 = nullptr, * temp2 = nullptr;
         if (st.top()->right){
-            temp1 = new Node(st.top()->right->data, st.top()->right->left, st.top()->right->right);
+            temp1 = new TreeNode(st.top()->right->data, st.top()->right->left, st.top()->right->right);
             st.top()->right = nullptr;// doing null because next time we pop we ge child free node to print 
         }
         if (st.top()->left){
-            temp2 = new Node(st.top()->left->data, st.top()->left->left, st.top()->left->right);
+            temp2 = new TreeNode(st.top()->left->data, st.top()->left->left, st.top()->left->right);
             st.top()->left = nullptr; // doing null because next time we pop we ge child free node to print 
         }
         if (temp1) st.push(temp1);
@@ -44,12 +44,12 @@ void PostorderTraversal(Node* root){
 
 
 int main(){
-    Node* root = new Node(50);
-    root->left = new Node(30);
-    root->right = new Node(60);
-    root->left->left = new Node(20);
-    root->right->right = new Node(65);
-    root->right->left = new Node(55);
+    TreeNode* root = new TreeNode(50);
+    root->left = new TreeNode(30);
+    root->right = new TreeNode(60);
+    root->left->left = new TreeNode(20);
+    root->right->right = new TreeNode(65);
+    root->right->left = new TreeNode(55);
     cout << "Postorder traversal: ";
     PostorderTraversal(root);
     cout << endl;

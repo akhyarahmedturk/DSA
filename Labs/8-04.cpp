@@ -4,21 +4,21 @@
 
 using namespace std;
 
-class Node{ // Node structure for the binary tree
+class TreeNode{ // TreeNode structure for the binary tree
 public:
     int data;
-    Node* left;
-    Node* right;
-    Node(int value){ // Constructor to initialize node
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int value){ // Constructor to initialize node
         data = value;
         left = nullptr;
         right = nullptr;
     }
 };
 
-Node* Construct(vector<int>& pre, vector<int>& in, int pre_s, int in_s, int in_end){
+TreeNode* Construct(vector<int>& pre, vector<int>& in, int pre_s, int in_s, int in_end){
     if (pre_s >= pre.size() || in_s > in_end) return nullptr;
-    Node* root = new Node(pre[pre_s]);
+    TreeNode* root = new TreeNode(pre[pre_s]);
     int curr_idx = 0;
     for (int i = in_s;i <= in_end;i++){
         if (in[i] == pre[pre_s]){
@@ -31,14 +31,14 @@ Node* Construct(vector<int>& pre, vector<int>& in, int pre_s, int in_s, int in_e
     return root;
 }
 
-void inorder_display(Node* node){ // Recursive inorder traversal function
+void inorder_display(TreeNode* node){ // Recursive inorder traversal function
     if (node == nullptr) return;
     inorder_display(node->left);
     cout << node->data << " ";
     inorder_display(node->right);
 }
 
-void preorder_display(Node* node){ // Recursive preorder traversal function
+void preorder_display(TreeNode* node){ // Recursive preorder traversal function
     if (node == nullptr) return;
     cout << node->data << " ";
     preorder_display(node->left);
@@ -48,7 +48,7 @@ void preorder_display(Node* node){ // Recursive preorder traversal function
 int main(){
     vector<int> preorder = { 3,9,20,15,7 };
     vector<int> inorder = { 9,3,15,20,7 };
-    Node* root = Construct(preorder, inorder, 0, 0, inorder.size() - 1);
+    TreeNode* root = Construct(preorder, inorder, 0, 0, inorder.size() - 1);
     cout << "inorder dispay : ";
     inorder_display(root);
     cout << endl;

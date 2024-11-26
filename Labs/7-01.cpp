@@ -2,19 +2,19 @@
 
 using namespace std;
 
-struct Node{
+struct ListNode{
     int data;
-    Node* next;
-    Node() : data(0), next(nullptr){ }
-    Node(int x) : data(x), next(nullptr){ }
-    Node(int x, Node* next) : data(x), next(next){ }
+    ListNode* next;
+    ListNode() : data(0), next(nullptr){ }
+    ListNode(int x) : data(x), next(nullptr){ }
+    ListNode(int x, ListNode* next) : data(x), next(next){ }
 };
 class Circular_queue{
-    Node* tail;
+    ListNode* tail;
 public:
     Circular_queue() :tail(nullptr){ }
     void Enqueue(int val){
-        Node* temp = new Node(val);
+        ListNode* temp = new ListNode(val);
         if (!tail){
             tail = temp;
             tail->next = tail;
@@ -33,7 +33,7 @@ public:
     }
     void Dequeue(){
         if (is_empty()) return;
-        Node* temp = tail->next;
+        ListNode* temp = tail->next;
         if (tail->next == tail){
             tail = nullptr;
         }
@@ -48,7 +48,7 @@ public:
     void display(){
         cout << "Queue: ";
         if (tail){
-            Node* temp = tail->next;
+            ListNode* temp = tail->next;
             do{
                 cout << temp->data << " ";
                 temp = temp->next;

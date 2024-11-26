@@ -1,38 +1,38 @@
 #include<iostream>
 using namespace std;
 template<class T>
-class Node{
+class ListNode{
 public:
     T data;
-    Node* prev;
-    Node* next;
-    Node(T v) :data(v), prev(nullptr), next(nullptr){ }
-    Node(T v, Node* p, Node* n) :data(v), prev(p), next(n){ }
+    ListNode* prev;
+    ListNode* next;
+    ListNode(T v) :data(v), prev(nullptr), next(nullptr){ }
+    ListNode(T v, ListNode* p, ListNode* n) :data(v), prev(p), next(n){ }
 };
 
 template<class T>
 class Deque{
-    Node<T>* front;
-    Node<T>* rear;
+    ListNode<T>* front;
+    ListNode<T>* rear;
 public:
     Deque(){ }
     void enqueue_front(T val){
         if (!front){
-            front = new Node<T>(val);
+            front = new ListNode<T>(val);
             rear = front;
         }
         else{
-            front->prev = new Node<T>(val, nullptr, front);
+            front->prev = new ListNode<T>(val, nullptr, front);
             front = front->prev;
         }
     }
     void enqueue_rear(T val){
         if (!rear){
-            rear = new Node<T>(val);
+            rear = new ListNode<T>(val);
             front = rear;
         }
         else{
-            rear->next = new Node<T>(val, rear, nullptr);
+            rear->next = new ListNode<T>(val, rear, nullptr);
             rear = rear->next;
         }
     }
@@ -76,7 +76,7 @@ public:
         return !front;
     }
     ~Deque(){
-        Node<T>* temp;
+        ListNode<T>* temp;
         while (front){
             temp = front;
             front = front->next;

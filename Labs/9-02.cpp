@@ -2,14 +2,14 @@
 
 using namespace std;
 
-class Node{ // Node structure for the binary tree
+class TreeNode{ // TreeNode structure for the binary tree
 public:
     int ID;
     string name;
     string dept;
-    Node* left;
-    Node* right;
-    Node(int id, string n, string d) :ID(id), name(n), dept(d){ // Constructor to initialize node
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int id, string n, string d) :ID(id), name(n), dept(d){ // Constructor to initialize node
         left = nullptr;
         right = nullptr;
     }
@@ -17,9 +17,9 @@ public:
 
 class Employee{
 private:
-    Node* root;
-    Node* insert(Node* root, int id, string& n, string& dep){
-        if (!root) return new Node(id, n, dep);
+    TreeNode* root;
+    TreeNode* insert(TreeNode* root, int id, string& n, string& dep){
+        if (!root) return new TreeNode(id, n, dep);
         if (id == root->ID){
             cout << "Cannot insert an employee with Duplicate ID." << endl;
             return root;
@@ -32,13 +32,13 @@ private:
         }
         return root;
     }
-    void inOrderTraversal(Node* temp){
+    void inOrderTraversal(TreeNode* temp){
         if (temp->left) inOrderTraversal(temp->left);
         cout << "ID: " << temp->ID << "\nName: " << temp->name << "\nDepartment: " << temp->dept << endl;
         if (temp->right) inOrderTraversal(temp->right);
     }
-    Node* deleteNode(Node* root, int key){
-        Node* temp = root;
+    TreeNode* deleteNode(TreeNode* root, int key){
+        TreeNode* temp = root;
         if (key > root->ID){
             if (root->right)
                 root->right = deleteNode(root->right, key);
@@ -61,7 +61,7 @@ private:
         }
         return root;
     }
-    Node* Find_successor(Node* root){
+    TreeNode* Find_successor(TreeNode* root){
         while (root->left) root = root->left;
         return root;
     }
@@ -71,7 +71,7 @@ public:
         root = insert(root, id, n, dep);
     }
     pair<string, string> search(int id){
-        Node* temp = root;
+        TreeNode* temp = root;
         while (temp && temp->ID != id){
             if (id > temp->ID) temp = temp->right;
             else temp = temp->left;
@@ -93,7 +93,7 @@ public:
         root = deleteNode(root, id);
     }
     pair<string, string> find_min(){
-        Node* temp = root;
+        TreeNode* temp = root;
         if (!temp) return { "","" };
         while (temp->left){
             temp = temp->left;
@@ -101,7 +101,7 @@ public:
         return { temp->name,temp->dept };
     }
     pair<string, string> find_max(){
-        Node* temp = root;
+        TreeNode* temp = root;
         if (!temp) return { "","" };
         while (temp->right){
             temp = temp->right;

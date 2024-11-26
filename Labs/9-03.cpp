@@ -1,10 +1,10 @@
 #include<iostream>
 #include<vector>
 #include<stack>
-#include"Node.h"
+#include"TreeNode.h"
 using namespace std;
 
-Node* lowestCommonAncestor(Node* root, Node* p, Node* q){
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q){
     if (p->data > root->data && q->data > root->data){
         return lowestCommonAncestor(root->right, p, q);
     }
@@ -16,13 +16,13 @@ Node* lowestCommonAncestor(Node* root, Node* p, Node* q){
 
 
 int main(){
-    Node* root = new Node(50);
-    root->left = new Node(30);
-    root->right = new Node(60);
-    root->left->left = new Node(20);
-    root->right->right = new Node(65);
-    root->right->left = new Node(55);
-    Node* a = root->left->left, * b = root->right->right;
+    TreeNode* root = new TreeNode(50);
+    root->left = new TreeNode(30);
+    root->right = new TreeNode(60);
+    root->left->left = new TreeNode(20);
+    root->right->right = new TreeNode(65);
+    root->right->left = new TreeNode(55);
+    TreeNode* a = root->left->left, * b = root->right->right;
     cout << "LCS of node a: " << a->data << " and b: " << b->data << " is: " << lowestCommonAncestor(root, a, b)->data << endl;
     a = root->right->left;
     b = root->right->right;

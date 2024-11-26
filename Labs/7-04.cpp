@@ -1,17 +1,17 @@
 #include<iostream>
 using namespace std;
 
-class Node{
+class ListNode{
 public:
     int data;
-    Node* prev;
-    Node* next;
-    Node(int v) :data(v), next(nullptr), prev(nullptr){ }
-    Node(int v, Node* p, Node* n) :data(v), prev(p), next(n){ }
+    ListNode* prev;
+    ListNode* next;
+    ListNode(int v) :data(v), next(nullptr), prev(nullptr){ }
+    ListNode(int v, ListNode* p, ListNode* n) :data(v), prev(p), next(n){ }
 };
 
-void display(Node* head){
-    Node* tail;
+void display(ListNode* head){
+    ListNode* tail;
     cout << endl << "Forward traversal: ";
     while (head){
         cout << head->data << " ";
@@ -26,15 +26,15 @@ void display(Node* head){
     cout << endl;
 }
 
-Node* Input(){
+ListNode* Input(){
     int n;
-    Node* head = new Node(0, nullptr, nullptr), * temp;
+    ListNode* head = new ListNode(0, nullptr, nullptr), * temp;
     temp = head;
     cout << "Enter size : ";
     cin >> n;
     if (n < 1) return nullptr;
     for (int i = 0;i < n;i++){
-        temp->next = new Node(0, temp, nullptr);
+        temp->next = new ListNode(0, temp, nullptr);
         temp = temp->next;
         cin >> temp->data;
     }
@@ -45,8 +45,8 @@ Node* Input(){
     return head;
 }
 
-Node* get_middle(Node* slow){
-    Node* fast = slow;
+ListNode* get_middle(ListNode* slow){
+    ListNode* fast = slow;
     while (fast->next != nullptr && fast->next->next != nullptr){
         slow = slow->next;
         fast = fast->next->next;
@@ -54,8 +54,8 @@ Node* get_middle(Node* slow){
     return slow;
 }
 
-Node* merge(Node* list1, Node* list2){
-    Node* head = new Node(0), * temp, * previous;
+ListNode* merge(ListNode* list1, ListNode* list2){
+    ListNode* head = new ListNode(0), * temp, * previous;
     temp = head;
     while (list1 && list2){
         previous = temp;
@@ -79,7 +79,7 @@ Node* merge(Node* list1, Node* list2){
     }
     temp = temp->next;
     temp->prev = previous;
-    Node* ttemp = temp;
+    ListNode* ttemp = temp;
     temp = head;
     head = head->next;
     if (head) head->prev = nullptr;
@@ -87,9 +87,9 @@ Node* merge(Node* list1, Node* list2){
     return head;
 }
 
-Node* sort(Node* start){
+ListNode* sort(ListNode* start){
     if (start != nullptr && start->next != nullptr){
-        Node* middle = get_middle(start), * start_right;
+        ListNode* middle = get_middle(start), * start_right;
         start_right = middle->next;
         middle->next = nullptr;
         start_right->prev = nullptr;
@@ -101,7 +101,7 @@ Node* sort(Node* start){
 }
 
 int main(){
-    Node* List = Input();
+    ListNode* List = Input();
     cout << "Before Sorting : ";
     display(List);
     List = sort(List);

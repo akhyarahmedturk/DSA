@@ -3,24 +3,24 @@
 
 using namespace std;
 
-class Node{
+class ListNode{
 public:
     string data;
-    Node* prev, * next;
-    Node(string d) :data(d), prev(nullptr), next(nullptr){ }
-    Node(string d, Node* p, Node* n) :data(d), prev(p), next(n){ }
+    ListNode* prev, * next;
+    ListNode(string d) :data(d), prev(nullptr), next(nullptr){ }
+    ListNode(string d, ListNode* p, ListNode* n) :data(d), prev(p), next(n){ }
 };
 
 class BrowserHistory{
-    Node* head;
+    ListNode* head;
 public:
     BrowserHistory(string homepage){
-        head = new Node(homepage);
+        head = new ListNode(homepage);
     }
 
     void visit(string url){
-        Node* temp1 = head->next, * temp2;
-        head->next = new Node(url, head, nullptr);
+        ListNode* temp1 = head->next, * temp2;
+        head->next = new ListNode(url, head, nullptr);
         head = head->next;
         while (temp1){
             temp2 = temp1->next;

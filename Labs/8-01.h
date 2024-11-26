@@ -3,12 +3,12 @@
 
 using namespace std;
 
-class Node{ // Node structure for the binary tree
+class TreeNode{ // TreeNode structure for the binary tree
 public:
 	int data;
-	Node* left;
-	Node* right;
-	Node(int value){ // Constructor to initialize node
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode(int value){ // Constructor to initialize node
 		data = value;
 		left = nullptr;
 		right = nullptr;
@@ -16,20 +16,20 @@ public:
 };
 class BinaryTree{ // Binary Tree Class
 public:
-	Node* root;
+	TreeNode* root;
 	BinaryTree(){
 		root = nullptr;
 	}
 	void insert(int data){ // Function to insert data in level-order (simple binary tree, not based on value comparison)
-		Node* newNode = new Node(data);
+		TreeNode* newNode = new TreeNode(data);
 		if (root == nullptr){ // If the tree is empty, set the new node as the root
 			root = newNode;
 			return;
 		}
-		queue<Node*> q; // Use a queue for level-order traversal to find the first available position
+		queue<TreeNode*> q; // Use a queue for level-order traversal to find the first available position
 		q.push(root);
 		while (!q.empty()){
-			Node* current = q.front();
+			TreeNode* current = q.front();
 			q.pop();
 		// Check the left child
 			if (current->left == nullptr){
@@ -61,12 +61,12 @@ public:
 		postOrderTraversal(root);
 		cout << endl;
 	}
-	Node* search(int val){
+	TreeNode* search(int val){
 		if (root == nullptr){ // If the tree is empty, set the new node as the root
 			return nullptr;
 		}
-		Node* current;
-		queue<Node*> q; // Use a queue for level-order traversal to find the first available position
+		TreeNode* current;
+		queue<TreeNode*> q; // Use a queue for level-order traversal to find the first available position
 		q.push(root);
 		while (!q.empty()){
 			current = q.front();
@@ -86,8 +86,8 @@ public:
 		if (root == nullptr){ // If the tree is empty, set the new node as the root
 			return;
 		}
-		Node* todelete = nullptr, * deepest, * parent;
-		queue<Node*> q;
+		TreeNode* todelete = nullptr, * deepest, * parent;
+		queue<TreeNode*> q;
 		q.push(root);
 		while (!q.empty()){
 			deepest = q.front();
@@ -114,19 +114,19 @@ public:
 		delete deepest;
 	}
 private:
-	void inorderTraversal(Node* node){ // Recursive inorder traversal function
+	void inorderTraversal(TreeNode* node){ // Recursive inorder traversal function
 		if (node == nullptr) return;
 		inorderTraversal(node->left);
 		cout << node->data << " ";
 		inorderTraversal(node->right);
 	}
-	void postOrderTraversal(Node* node){ // Recursive postorder traversal function
+	void postOrderTraversal(TreeNode* node){ // Recursive postorder traversal function
 		if (node == nullptr) return;
 		postOrderTraversal(node->left);
 		postOrderTraversal(node->right);
 		cout << node->data << " ";
 	}
-	void preOrderTraversal(Node* node){ // Recursive preorder traversal function
+	void preOrderTraversal(TreeNode* node){ // Recursive preorder traversal function
 		if (node == nullptr) return;
 		cout << node->data << " ";
 		preOrderTraversal(node->left);

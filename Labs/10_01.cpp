@@ -3,13 +3,13 @@
 
 using namespace std;
 
-class Node{ // Node structure for the binary tree
+class TreeNode{ // TreeNode structure for the binary tree
 public:
     int data;
     int height;
-    Node* left;
-    Node* right;
-    Node(int value, Node* l = nullptr, Node* r = nullptr){ // Constructor to initialize node
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int value, TreeNode* l = nullptr, TreeNode* r = nullptr){ // Constructor to initialize node
         height = 1;
         data = value;
         left = l;
@@ -18,14 +18,14 @@ public:
 };
 
 class AVL_Tree{
-    Node* root;
-    Node* Find_successor(Node* right){
+    TreeNode* root;
+    TreeNode* Find_successor(TreeNode* right){
         while (right->left){
             right = right->left;
         }
         return right;
     }
-    Node* Balance_tree(Node* root){
+    TreeNode* Balance_tree(TreeNode* root){
         set_height(root);
         int BF = get_height(root->left) - get_height(root->right);
         if (BF > 1){
@@ -44,7 +44,7 @@ class AVL_Tree{
         }
         return root;
     }
-    Node* delete_Node(Node* root, int key){
+    TreeNode* delete_Node(TreeNode* root, int key){
         if (key > root->data){
             if (root->right)
                 root->right = delete_Node(root->right, key);
@@ -55,12 +55,12 @@ class AVL_Tree{
         }
         else{
             if (root->left && root->right){
-                Node* successor = Find_successor(root->right);
+                TreeNode* successor = Find_successor(root->right);
                 root->data = successor->data;
                 root->right = delete_Node(root->right, successor->data);
             }
             else{
-                Node* temp = root;
+                TreeNode* temp = root;
                 root = (root->left) ? root->left : root->right;
                 delete temp;
             }
@@ -69,9 +69,9 @@ class AVL_Tree{
             root = Balance_tree(root);
         return root;
     }
-    Node* insert(Node* root, int data){
+    TreeNode* insert(TreeNode* root, int data){
         if (!root){
-            root = new Node(data);
+            root = new TreeNode(data);
         }
         else if (data > root->data){
             root->right = insert(root->right, data);
@@ -82,19 +82,19 @@ class AVL_Tree{
         root = Balance_tree(root);
         return root;
     }
-    void set_height(Node* root){
+    void set_height(TreeNode* root){
         root->height = 1 + max(get_height(root->left), get_height(root->right));
     }
-    Node* rotate_left(Node* root){
-        Node* temp = root->right;
+    TreeNode* rotate_left(TreeNode* root){
+        TreeNode* temp = root->right;
         root->right = temp->left;
         temp->left = root;
         set_height(root);
         set_height(temp);
         return temp;
     }
-    Node* rotate_right(Node* root){
-        Node* temp = root->left;
+    TreeNode* rotate_right(TreeNode* root){
+        TreeNode* temp = root->left;
         root->left = temp->right;
         temp->right = root;
         set_height(root);
@@ -102,12 +102,12 @@ class AVL_Tree{
         return temp;
     }
     void lavel_order_traversal(){ // Recursive inorder traversal function
-        queue<Node*> q;
+        queue<TreeNode*> q;
         q.push(root);
         while (!q.empty()){
             int size = q.size();
             while (size > 0){
-                Node* temp = q.front();
+                TreeNode* temp = q.front();
                 q.pop();
                 if (!temp){
                     cout << "null" << " ";
@@ -130,7 +130,7 @@ public:
     void delete_Node(int key){
         root = delete_Node(root, key);
     }
-    int get_height(Node* root){
+    int get_height(TreeNode* root){
         if (!root) return 0;
         return root->height;
     }

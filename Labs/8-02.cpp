@@ -3,7 +3,7 @@
 #include"8-01.h"
 using namespace std;
 
-bool validate(Node* L, Node* R){
+bool validate(TreeNode* L, TreeNode* R){
 	if (!L && !R) return true;
 	if (!L || !R) return false;
 	if (L->data != R->data) return false;
