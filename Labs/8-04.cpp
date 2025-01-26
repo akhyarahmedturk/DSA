@@ -16,7 +16,7 @@ public:
     }
 };
 
-TreeNode* Construct(vector<int>& pre, vector<int>& in, int pre_s, int in_s, int in_end){
+TreeNode* Construct(vector<int>& pre, vector<int>& in, int& pre_s, int in_s, int in_end){
     if (pre_s >= pre.size() || in_s > in_end) return nullptr;
     TreeNode* root = new TreeNode(pre[pre_s]);
     int curr_idx = 0;
@@ -26,8 +26,9 @@ TreeNode* Construct(vector<int>& pre, vector<int>& in, int pre_s, int in_s, int 
             break;
         }
     }
-    root->left = Construct(pre, in, pre_s + 1, in_s, curr_idx - 1);
-    root->right = Construct(pre, in, pre_s + (curr_idx - in_s) + 1, curr_idx + 1, in_end);
+    pre_s++;
+    root->left = Construct(pre, in, pre_s, in_s, curr_idx - 1);
+    root->right = Construct(pre, in, pre_s, curr_idx + 1, in_end);
     return root;
 }
 
@@ -48,7 +49,8 @@ void preorder_display(TreeNode* node){ // Recursive preorder traversal function
 int main(){
     vector<int> preorder = { 3,9,20,15,7 };
     vector<int> inorder = { 9,3,15,20,7 };
-    TreeNode* root = Construct(preorder, inorder, 0, 0, inorder.size() - 1);
+    int pre_s = 0;
+    TreeNode* root = Construct(preorder, inorder, pre_s, 0, inorder.size() - 1);
     cout << "inorder dispay : ";
     inorder_display(root);
     cout << endl;

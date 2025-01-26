@@ -39,7 +39,9 @@ ListNode* deleteDuplicates(ListNode* head){
     ListNode* temp = head;
     while (temp->next){
         if (temp->next->val == temp->val){
+            ListNode* duplicate=temp->next;
             temp->next = temp->next->next;
+            delete duplicate;
         }
         else{
             temp = temp->next;

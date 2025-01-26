@@ -30,7 +30,7 @@ class sort{
 public:
     void sort_asc(vector<int>& vec){
         int size = vec.size();
-        for (int i = size - 1;i >= 0;i--){
+        for (int i = size / 2;i >= 0;i--){
             max_heapify_down(vec, i, size);
         }
         int curr_size = size;
@@ -42,7 +42,7 @@ public:
     }
     void sort_dsc(vector<int>& vec){
         int size = vec.size();
-        for (int i = size - 1;i >= 0;i--){
+        for (int i = size / 2;i >= 0;i--){
             min_heapify_down(vec, i, size);
         }
         int curr_size = size;
@@ -63,7 +63,7 @@ void display(vector<int>& vec){
 
 int main(){
     sort sort;
-    vector<int> vec = { 2,56,3,87,5,9,34,0 };
+    vector<int> vec = { 2,56,3,87,5,9,34,0,90,87 };
     cout << "Before sorting: ";
     display(vec);
     sort.sort_asc(vec);
