@@ -1,0 +1,1 @@
+{"name":"Local: a","url":"g:\\Shared drives\\DSA labs\\DSA\\ICPC\\ICPC_Cpps\\2024_Onsite\\a.cpp","tests":[{"id":1738342624944,"input":"4 \nC 4 130 7 2 \nJ 2 200 9 4 \nW 1 180 7 5 \nF 2 160 5 5 ","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\ICPC\\ICPC_Cpps\\2024_Onsite\\a.cpp","group":"local","local":true}
