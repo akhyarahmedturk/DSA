@@ -1,0 +1,37 @@
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<unordered_set>
+#include<map>
+#include<set>
+#include<cstring>
+#include<cmath>
+#include<limits>
+#include<algorithm>
+#include<iomanip>
+#include<queue>
+#include<stack>
+using namespace std;
+
+int main() {
+    string str ;
+    cin >> str ;
+    string temp = str ;
+    // int n = str.length() ;
+    // for( int i = n - 2 ; i >= 0 ; i-- ) {
+    //     if( str[i] < str[i + 1] ) {
+    //         swap( str[i] , str[i + 1] ); 
+    //         break;
+    //     }
+    // }
+    // if( temp == str )
+    //     cout << 0 << endl ;
+    // else
+    //     cout << str << '\n' ;
+    next_permutation( str.begin() , str.end() ) ;
+    if( temp >= str )
+        cout << 0 << endl ;
+    else
+        cout << str << '\n' ;
+    return 0 ;
+}

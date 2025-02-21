@@ -1,0 +1,40 @@
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<unordered_set>
+#include<map>
+#include<set>
+#include<cstring>
+#include<cmath>
+#include<limits>
+#include<algorithm>
+#include<iomanip>
+#include<queue>
+#include<stack>
+using namespace std;
+
+using pp = pair<int , int> ;
+
+int main() {
+    int n , maxNum = 0 ;
+    cin >> n ;
+    unordered_map<int , int> freq ;
+    for( int i = 0 ; i < n ; i++ ) {
+        int x ;
+        cin >> x ;
+        freq[ x ]++ ;
+    }
+    
+    vector<pp> se ;
+    for( auto& itr : freq ) 
+        se.push_back( { itr.first , itr.second } ) ;
+    
+    sort( se.rbegin() , se.rend() ) ;
+    int count = se[0].second ;
+    for( int i = 1 ; i < n ; i++ ) {
+        if( se[i].second > count )
+            count = se[i].second;
+    }
+    cout << count << '\n' ;
+    return 0 ;
+}

@@ -1,0 +1,48 @@
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<unordered_set>
+#include<map>
+#include<set>
+#include<cstring>
+#include<cmath>
+#include<limits>
+#include<algorithm>
+#include<iomanip>
+#include<queue>
+#include<stack>
+using namespace std;
+
+int main() {
+    int n ;
+    double d ;
+    cin >> n >> d ;
+    vector<int> arr( n ) ;
+
+    for( int i = 0 ; i < n ; i++ )
+        cin >> arr[i] ;
+    
+    sort( arr.rbegin() , arr.rend() ) ;
+    int l = 0 , r = n - 1 , count = 0 ;
+    d++ ;
+    while( l <= r ) {
+        // cout << l << " " << r << endl;
+        // cout << arr[l]  << " " << arr[r] << endl;
+        if( arr[l] >= d )
+            count++ ;
+        else {
+            int temp = ceil( d / arr[l] ) ;
+            // cout << "Temp = " << temp << endl ;
+            if( r - l + 1 >= temp ) {
+                count++ ;
+                r -= temp - 1 ;
+            }
+            else
+                break ;
+        }
+        l++ ;
+    }
+
+    cout << count << '\n' ;
+    return 0 ;
+}

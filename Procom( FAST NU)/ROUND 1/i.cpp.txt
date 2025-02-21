@@ -1,0 +1,76 @@
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<unordered_set>
+#include<map>
+#include<set>
+#include<cstring>
+#include<cmath>
+#include<limits>
+#include<algorithm>
+#include<iomanip>
+#include<queue>
+#include<stack>
+using namespace std;
+
+// unordered_map<int , unordered_set<int>> multipleNums( unordered_set<int>& dups , vector<int>& arr ) {
+//     int n = arr.size() ;
+//     unordered_map<int , unordered_set<int>> hash ;
+//     for( int i = 0 ; i < n ; i++ ) {
+//         hash[i].insert( i ) ;
+//         for( int j = 2 * i ; j <= n ; j += i )
+//             hash[j].insert( i ) ;
+//     }
+
+//     // for( auto& itr : hash ) {
+//     //     cout << "Num = " << itr.first << endl ;
+//     //     for( auto& itr2 : itr.second )
+//     //         cout << itr2 << " " ;
+//     //     cout << endl ;
+//     // }
+//     return hash ;
+// }
+
+int main() {
+    int n ;
+    cin >> n ;
+    vector<int> arr( n ) ;
+    for( int i = 0 ; i < n ; i++ )
+        cin >> arr[i] ;
+    
+    sort( arr.begin() , arr.end() ) ;
+    int m = arr[n - 1] + 1 ;
+    vector<long long> a( m , 1 ) ;
+    unordered_set<int> dups( arr.begin() , arr.end() ) ;
+    
+    for( int i = 2 ; i <= m ; i++ ) {
+        if( dups.find( i ) != dups.end() ) {
+            // cout << i << endl ;
+            for( int j = i ; j <= m  ; j += i ) {
+                if( dups.find( j ) != dups.end() ) {
+                    a[j] += i ;
+                    // cout << a[j] << " " << j << endl;
+                }
+            }
+        }
+    }
+
+    long long sum = *max_element( a.begin() , a.end() ) ;
+    cout << sum << '\n' ;
+    // unordered_map<int , unordered_set<int>> hash = multipleNums( dups , arr ) ;
+    // int maxSize = 0 , num = 0 ;
+
+    // for( auto& itr : hash ) {
+    //     if( itr.second.size() > maxSize ) {
+    //         maxSize = itr.second.size() ;
+    //         num = itr.first ;
+    //     }
+    // }
+
+    // long long sum = 1 ;
+    // for( auto& itr : hash[num] )
+    //     sum += itr ;
+    
+    // cout << sum << '\n' ;
+    return 0 ;
+}

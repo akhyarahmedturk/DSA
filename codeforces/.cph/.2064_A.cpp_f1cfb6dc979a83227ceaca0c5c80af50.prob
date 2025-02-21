@@ -1,0 +1,1 @@
+{"name":"Local: 2064_A","url":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\2064_A.cpp","tests":[{"id":1739805002410,"input":"5\n5\n00110\n4\n1111\n3\n001\n5\n00000\n3\n101\n","output":"2\n1\n1\n0\n3"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\2064_A.cpp","group":"local","local":true}

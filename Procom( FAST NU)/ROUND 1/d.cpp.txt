@@ -1,0 +1,32 @@
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<unordered_set>
+#include<map>
+#include<set>
+#include<cstring>
+#include<cmath>
+#include<limits>
+#include<algorithm>
+#include<iomanip>
+#include<queue>
+#include<stack>
+using namespace std;
+
+int main() {
+    int n, h, x; 
+    cin >> n >> h >> x ;
+    int diff = h - x ;
+    int maxNum = 0 ;
+    for( int i = 1 ; i <= n ; i++ ) {
+        int temp ;
+        cin >> temp ;
+        maxNum = max( maxNum , temp ) ;
+    }
+
+    if( maxNum >= diff )
+        cout << "YES\n" ;
+    else
+        cout << "NO\n" ;
+    return 0 ;
+}

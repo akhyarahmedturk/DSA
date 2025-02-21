@@ -1,0 +1,22 @@
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<unordered_set>
+#include<map>
+#include<set>
+#include<cstring>
+#include<cmath>
+#include<limits>
+#include<algorithm>
+#include<iomanip>
+#include<queue>
+#include<stack>
+using namespace std;
+
+int main() {
+    int a ;
+    cin >> a ;
+    long long n = 2 * a + 1;
+    cout << n << '\n' ;
+    return 0 ;
+}

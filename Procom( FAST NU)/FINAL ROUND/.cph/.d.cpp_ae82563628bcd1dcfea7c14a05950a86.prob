@@ -1,0 +1,1 @@
+{"name":"Local: d","url":"c:\\Users\\student24\\Documents\\Cpps\\d.cpp","tests":[{"id":1739939951178,"input":"5 4\nTFTF\nTFFF\nTFTT\nTFFT\nTFTF","output":""},{"id":1739940397008,"input":"3 5\nTFTFT\nTFTFT\nTFTFT","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\student24\\Documents\\Cpps\\d.cpp","group":"local","local":true}

@@ -1,0 +1,28 @@
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<unordered_set>
+#include<map>
+#include<set>
+#include<cstring>
+#include<cmath>
+#include<limits>
+#include<algorithm>
+#include<iomanip>
+#include<queue>
+#include<stack>
+using namespace std;
+
+int main() {
+    string str ;
+    cin >> str ;
+    int n = str.length() ;
+    vector<vector<int>> vec( n ) ;
+    vector<int> temp( 9, 0 ) ;
+    for( int i = 0 ; i < n  ; i++ ) {
+        temp[ str[i] - '0' ]++ ;
+        vec[i] = temp ;
+    }
+   
+    return 0 ;
+}

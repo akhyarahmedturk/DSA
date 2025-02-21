@@ -1,0 +1,38 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int calc( vector<int>& arr , int i , bool hold, int k , int lastPrice ) {
+    if( k == 0 || i == arr.size() ) 
+        return 0 ;
+
+    int cur = 0 ;
+    if( hold ) {
+        if( lastPrice < arr[i] ) {
+            cur += max( ( arr[i] - lastPrice ) + calc( arr, i + 1, false, k - 1, -1 ), calc( arr, i + 1, true, k , lastPrice ) ) ;
+        }
+        else
+            cur += calc( arr, i + 1 , hold , k , lastPrice ) ;
+    }
+    else {
+        cur += max( calc( arr, i + 1, true , k , arr[i] ) , calc( arr, i + 1, false , k , -1 ) ) ;
+    }
+
+    return cur ;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false) ; cin.tie( nullptr ) ;
+    int t ;
+    cin >> t ;
+    while( t-- ) {
+       int k , n ;
+       cin >> k >> n ;
+
+       vector<int> arr( n ) ;
+       for( int i = 0 ; i < n ; i++ )
+            cin >> arr[i] ;
+
+        cout << max( calc( arr , 1 , true , k , arr[0] ), calc( arr , 1 , false , k , -1 ) ) << endl ;
+    }
+    return 0 ;
+}
