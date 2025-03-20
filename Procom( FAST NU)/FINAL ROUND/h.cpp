@@ -1,61 +1,51 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<queue>
+#include<unordered_map>
+#include<set>
+#include<algorithm>
 using namespace std;
 
-void fact( int n , set<long long>& hash ) {
-    long long val = 1 ;
-    for( int i = 1 ; i <= 16 ; i++ ) {
-        val *= i ;
-        hash.insert( val ) ;
+int res;
+vector<long long> mp;
+void fact() {
+    long long val = 6 ,k=4;
+    while(val<= 1e13) {
+        mp.push_back(val) ;
+        val *= k ;
+        k++;
     }
 }
 
-long long ans = INT_MAX ;
-unordered_map< long long , long long > sums ;
-
-void solve( long long n , vector<long long>& hash , long long i ) {
-    // cout << n << endl ;
-    if( sums.count( n ) ) {
-        sums[n] = min( sums[n] , i ) ;
-        return ;
+void solve(int idx,long long num,int count) {
+    if(idx==-1) {
+        int temp=0;
+        while(num){
+            temp += num%2 ;
+            num /= 2 ;
+        } 
+        res=min(res,temp+count);
+        return;
     }
-    else
-        sums[n] = i ;
-
-    for( int j = hash.size() - 1 ; j >= 0 ; j-- ) {
-        if( hash[j] != -1 && n - hash[j] >= 0 ) {
-            long long temp = hash[j] ;
-            hash[j] = -1 ;
-            solve( n + temp , hash , i + 1 ) ;
-            hash[j] = temp ;
-        }
-    }
+    solve(idx-1,num,count);
+    if(mp[idx] > num) return;
+    num-=mp[idx] ;
+    solve(idx-1,num,count+1);   
+    num+=mp[idx] ;
 }
 
 int main() {
     int t ;
     cin >> t ;
-    set<long long> hash ;
-    fact( 15, hash ) ;
-    for( long long i = 1 ; i <= 45 ; i++ )
-        hash.insert( 1LL << i ) ;
-    
-    vector<long long> vals ;
-    for( long long val : hash )
-        vals.push_back( val ) ;
-    
-    solve( 0 , vals , 0 ) ;
-    // for( auto& itr : hash )
-    //     cout << itr << endl ;
-    
+    fact() ;
     while( t-- ) {
         long long x ;
         cin >> x ;
-        // cout << x << endl ;
-        if( sums.count( x ) )
-            cout << sums[x] << endl ;
-        else
-            cout << -1 << endl ;
-        ans = INT_MAX ;
+        long long temp=x;
+        res=100;
+        solve(mp.size()-1,temp,0);
+        cout<<res<<endl;
     }
     return 0 ;
 }

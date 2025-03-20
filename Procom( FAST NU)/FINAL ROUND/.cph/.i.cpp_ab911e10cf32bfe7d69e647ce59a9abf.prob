@@ -1,0 +1,1 @@
+{"name":"Local: i","url":"g:\\Shared drives\\DSA labs\\DSA\\Procom( FAST NU)\\FINAL ROUND\\i.cpp","tests":[{"id":1740231253865,"input":"12 2","output":"26"},{"id":1740231261019,"input":"34 2\n","output":"-1"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\Procom( FAST NU)\\FINAL ROUND\\i.cpp","group":"local","local":true}
