@@ -1,0 +1,1 @@
+{"name":"Local: 1691_B","url":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1691_B.cpp","tests":[{"id":1741542801238,"input":"3\n5\n1 1 1 1 1\n6\n3 6 8 13 15 21\n5\n1 1 2 2 3","output":"5 1 2 3 4 \n-1\n-1"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1691_B.cpp","group":"local","local":true}

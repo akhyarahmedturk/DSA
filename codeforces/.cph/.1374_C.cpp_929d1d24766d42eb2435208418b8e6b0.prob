@@ -1,0 +1,1 @@
+{"name":"Local: 1374_C","url":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1374_C.cpp","tests":[{"id":1742376358222,"input":"4\n2\n)(\n4\n()()\n8\n())()()(\n10\n)))((((())\n","output":"1\n0\n1\n3"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1374_C.cpp","group":"local","local":true}
