@@ -1,0 +1,1 @@
+{"name":"Local: 1013_C","url":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1013_C.cpp","tests":[{"id":1742915472953,"input":"4\n4\n5\n3\n2","output":"-1\n4 1 3 5 2\n1 3 2\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1013_C.cpp","group":"local","local":true}
