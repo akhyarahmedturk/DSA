@@ -25,21 +25,53 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+string res="",str;
+
+void sol(int idx,int fours,string &curr){
+    if(idx==curr.length()){
+        if(curr>=str){
+            if(res=="") res=curr;
+            else if(curr<res) res=curr;
+        }
+    }
+    else if(fours==curr.length()/2){
+        curr[idx]='7';
+        sol(idx+1,fours,curr);
+    }
+    else if((idx-fours)==curr.length()/2){
+        curr[idx]='4';
+        sol(idx+1,fours+1,curr);
+    }
+    else{
+        curr[idx]='7';
+        sol(idx+1,fours,curr);
+        curr[idx]='4';
+        sol(idx+1,fours+1,curr);
+    }
+}
+
 void solve() {
-    int n;
+    int n,len;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    str=to_string(n);
+    len=str.length();
+    if(len%2==0){
+        string curr(len,' ');
+        sol(0LL,0LL,curr);
+    }
+    if(res!="") cout<<res<<endl;
+    else{
+        for(int i=0;i<(len+2)/2;i++) cout<<'4';
+        for(int i=0;i<(len+2)/2;i++) cout<<'7';
+        cout<<endl;
     }
 }
 
 int32_t main(){
+//ios_base::sync_with_stdio(false);
+//cin.tie(NULL);
     int t=1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }

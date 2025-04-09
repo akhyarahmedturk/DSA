@@ -25,15 +25,30 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve() {
+int gcd(int a, int b) {
+    while (b) {
+        a %= b;
+        swap(a, b);
+    }
+    return a;
+}
+
+void solve(){
     int n;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    vi arr(n);
+    input(arr,n);
+    sort(all(arr));
+    int g=-1;
+    if(arr[0]==arr[1]){ yesno(true); return;}
+    else{
+        forn(i,1,n){
+            if(arr[i]%arr[0]==0) {
+                if(g==-1) g=arr[i];
+                else g=gcd(g,arr[i]);
+            }
+        }
+        yesno(g==arr[0]);
     }
 }
 

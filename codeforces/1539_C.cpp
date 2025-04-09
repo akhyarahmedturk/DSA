@@ -2,12 +2,7 @@
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
 
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-// use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
-// idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
@@ -26,20 +21,39 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
-    cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    int n,k,x,groups=1,total=0;
+    cin>>n>>k>>x;
+    vi arr(n);
+    input(arr,n);
+    sort(all(arr));
+    map<int,int> mp;
+    for(int i=1;i<n;i++){
+        if(arr[i]-arr[i-1]>x) {
+            total+=(arr[i]-arr[i-1]-1)/x;
+            mp[(arr[i]-arr[i-1]-1)/x]++;
+            groups++;
+        }
     }
-}
+    if(k>=total) {
+        cout<<1<<endl;
+        return;
+    }
+    for(auto it:mp){
+        if(k>it.first*it.second){
+            groups-=it.second;
+            k-=it.second*it.first;
+        }
+        else{
+            groups-= k/it.first;
+            break;
+        }
+    }
+    cout<<max(1LL,groups);
+ }
 
 int32_t main(){
     int t=1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }

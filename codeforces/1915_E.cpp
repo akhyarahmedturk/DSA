@@ -2,12 +2,7 @@
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
 
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-// use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
-// idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
@@ -28,13 +23,33 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    vi arr(n),prefix(n+2);
+    input(arr,n);
+    prefix[0]=prefix[1]=0;
+    forn(i,0,n){
+        prefix[i+2]=prefix[i]+arr[i];
     }
+    bool check=false;
+    set<int> st1,st2;
+    st1.insert(0);
+    st2.insert(0);
+    forn(i,3,n+2){
+        if(i%2!=0){
+            if(st1.find(prefix[i]-prefix[i-1])!=st1.end() || st2.find(prefix[i-1]-prefix[i])!=st2.end()){
+                check=true;
+                break;
+            }
+        }
+        else{
+            if(st2.find(prefix[i]-prefix[i-1])!=st2.end() || st1.find(prefix[i-1]-prefix[i])!=st1.end()){
+                check=true;
+                break;
+            }
+        }
+        if(i%2==0 ) st1.insert(prefix[i-1]-prefix[i-2]);
+        else st2.insert(prefix[i-1]-prefix[i-2]);
+    }
+    yesno(check);
 }
 
 int32_t main(){

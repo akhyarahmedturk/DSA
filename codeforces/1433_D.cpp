@@ -2,12 +2,7 @@
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
 
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-// use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
-// idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
@@ -28,12 +23,29 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    vi arr(n);
+    vector<pii> res;
+    input(arr,n);
+    forn(i,1,n){
+        if(arr[i]!=arr[0]){
+            res.push_back({1,i+1});
+            arr[i]=-1;
+        }
+    }
+    if(res.size()==0){
+        yesno(false);
+    }
+    else{
+        arr[0]=-1;
+        yesno(true);
+        forn(i,0,res.size()){
+            cout<<res[i].first<<" "<<res[i].second<<endl;
+        }
+        forn(i,0,n){
+            if(arr[i]!=-1){
+                cout<<res[0].second<<" "<<i+1<<endl;
+            }
+        }
     }
 }
 

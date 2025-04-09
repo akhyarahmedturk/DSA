@@ -26,15 +26,19 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
+    int n,res=0;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    if(n<15){
+        if(n<=2) res=n+1;
+        else res=3;
     }
+    else{
+        res+=(n/15)*3;
+        n=n%15;
+        if(n<=2) res+=n+1;
+        else res+=3;
+    }
+    cout<<res<<endl;
 }
 
 int32_t main(){

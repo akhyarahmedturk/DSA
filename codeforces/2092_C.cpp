@@ -2,12 +2,7 @@
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
 
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-// use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
-// idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
@@ -26,15 +21,24 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
+    int n,odd=0LL,even=0LL,even_sum=0LL,odd_sum=0LL,max_=0LL;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    forn(i,0,n){
+        int a;
+        cin>>a;
+        max_=max(max_,a);
+        if(a&1){
+            odd++;
+            odd_sum+=a;
+        }
+        else{
+            even++;
+            even_sum+=a;
+        }
     }
+    if(even==0 || odd==0) cout<<max_<<endl;
+    else if(odd==1) cout<<odd_sum+even_sum<<endl;
+    else cout<<odd_sum+even_sum-(odd-1LL)<<endl;
 }
 
 int32_t main(){

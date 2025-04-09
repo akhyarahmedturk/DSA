@@ -28,16 +28,30 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    vector<pii> arr(n);
+    forn(i,0,n){
+        cin>>arr[i].second;
+        int mm=0LL;
+        forn(j,0,arr[i].second){
+            int a;
+            cin>>a;
+            mm=max(mm,a-j);
+        }
+        arr[i].first=mm+1;
     }
+    sort(all(arr));
+    int start=arr[0].first,curr;
+    curr=start;
+    forn(i,0,n){
+        start+=max(0LL,arr[i].first-curr);
+        curr=max(curr,arr[i].first)+arr[i].second;
+    }
+    cout<<start<<endl;
 }
 
 int32_t main(){
+//ios_base::sync_with_stdio(false);
+//cin.tie(NULL);
     int t=1;
     cin >> t;
     while (t--) {

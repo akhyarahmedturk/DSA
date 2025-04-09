@@ -26,15 +26,44 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
-    cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    int k,x,res=0;
+    cin>>k>>x;
+    if(x>=(k*(k+1))/2 + (k*(k-1))/2) res=2*k-1;
+    else if(x<=(k*(k+1))/2){
+        int start=1,end=k,mid,ans=1;
+        while(start<=end){
+            mid=(start+end)/2;
+            if(x==(mid*(2+mid-1))/2){
+                ans=mid;
+                break;
+            }
+            else if(x>(mid*(2+mid-1))/2){
+                ans=mid+1;
+                start=mid+1;
+            }
+            else end=mid-1;
+        }
+        res=ans;
     }
+    else{
+        res=k;
+        x-=(k*(k+1))/2;
+        int start=1,end=k-1,mid,ans=1;
+        while(start<=end){
+            mid=(start+end)/2;
+            if(x==(mid*(2*(k-1)-mid+1))/2){
+                ans=mid;
+                break;
+            }
+            else if(x>(mid*(2*(k-1)-mid+1))/2){
+                ans=mid+1;
+                start=mid+1;
+            }
+            else end=mid-1;
+        }
+        res+=ans;
+    }
+    cout<<res<<endl;
 }
 
 int32_t main(){

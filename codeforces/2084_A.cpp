@@ -28,12 +28,11 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    if(n%2==0) cout<<-1<<endl;
+    else{
+        cout<<n<<" "<<1<<" ";
+        forn(i,2,n) cout<<i<<" ";
+        cout<<endl;
     }
 }
 

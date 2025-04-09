@@ -28,16 +28,33 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    vector<int> bits(31,0);
+    forn(i,0,n){
+        int a,j=0;
+        cin>>a;
+        while(a){
+            bits[j]+=(a&1);
+            a=a>>1;
+            j++;
+        }
     }
+    int end=n;
+    forn(i,0,31){
+        if(bits[i]>0) end=min(end,bits[i]);
+    }
+    forn(i,1,end+1){
+        bool check=true;
+        forn(j,0,31){
+            if(bits[j]%i!=0) check=false;
+        }
+        if(check) cout<<i<<" ";
+    }
+    cout<<endl;
 }
 
 int32_t main(){
+//ios_base::sync_with_stdio(false);
+//cin.tie(NULL);
     int t=1;
     cin >> t;
     while (t--) {

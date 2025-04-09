@@ -26,20 +26,24 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
-    cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    int n,k;
+    cin>>n>>k;
+    if(k==1){// only one group
+        cout<<(n*(n-1))/2<<" "<<(n*(n-1))/2<<endl;
+        return;
     }
+    int a=(n/k);// groups have a friends  (min possible)
+    int b=(n%k);// groups have a+1 friends
+    int min_val= (k-b)*(a*(a-1)/2) + (b)*(a*(a+1)/2);
+    int max_val= ((n-k+1)*(n-k))/2;
+    cout<<min_val<<" "<<max_val<<endl;
 }
 
 int32_t main(){
+//ios_base::sync_with_stdio(false);
+//cin.tie(NULL);
     int t=1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }

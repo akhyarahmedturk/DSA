@@ -26,18 +26,25 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
-    cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    int n,m,k;
+    cin>>n>>m>>k;
+    int mm=min(n/(m+1),n-m*k);
+    while(n>0){
+        int a=max(mm,k);
+        while(a>0 && n>0) {
+            for(int i=0;i<mm && n>0 && a>0;i++){
+                cout<<i<<" ";
+                n--;
+                a--;
+            }
+        }
     }
+    cout<<endl;
 }
 
 int32_t main(){
+//ios_base::sync_with_stdio(false);
+//cin.tie(NULL);
     int t=1;
     cin >> t;
     while (t--) {

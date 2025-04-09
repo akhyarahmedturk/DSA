@@ -25,23 +25,54 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve() {
-    int n;
-    cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+const int N = 1e6;
+
+vector<bool> seive(){
+    vector<bool> is_prime(N + 1, true);
+    is_prime[0] = is_prime[1] = false;
+
+    for (long long i = 2; i * i <= N; ++i) {
+        if (is_prime[i]) {
+            for (long long j = i * i; j <= N; j += i) {
+                is_prime[j] = false;
+            }
+        }
+    }
+    return is_prime;
+}
+
+void solve(vector<bool> &is_prime) {
+    int n,k;
+    cin>>n>>k;
+    if(n==1LL && k>1){
+        string str=to_string(n),res="";
+        while(k--){
+            res+=str;
+        }
+        n=stoll(res);
+    }
+    // cout<<" n "<<n<<endl;
+    if(k>1) {yesno(false);} 
+    else if(n<100000) {yesno(is_prime[n]);}
+    else{
+        for (int i = 2; i*i <= n; i++) {
+            if (n % i == 0) {
+                yesno(false);
+                return;
+            } 
+        }
+        yesno(true);
     }
 }
 
 int32_t main(){
+//ios_base::sync_with_stdio(false);
+//cin.tie(NULL);
     int t=1;
     cin >> t;
+    vector<bool> is_prime=seive();
     while (t--) {
-        solve();
+        solve(is_prime);
     }
     return 0;
 }

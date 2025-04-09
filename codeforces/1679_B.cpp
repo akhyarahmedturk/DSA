@@ -2,12 +2,7 @@
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
 
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-// use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
-// idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
@@ -26,20 +21,41 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
-    cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    int n,q,sum=0;
+    cin>>n>>q;
+    set<int> st;
+    vector<int> arr(n);
+    forn(i,0,n){
+        cin>>arr[i];
+        sum+=arr[i];
+    }
+    int x,idx,val,last_changed=-1;
+    while(q--){
+        cin>>x;
+        if(x==1){
+            cin>>idx>>val;
+            idx--;
+            if(last_changed==-1 ||  st.find(idx)!=st.end()){
+                sum+=(val-arr[idx]);
+            }
+            else{
+                st.insert(idx);
+                sum+=(val-last_changed);
+            }
+            arr[idx]=val;
+        }
+        else{
+            cin>>last_changed;
+            sum=n*last_changed;
+            st= set<int>();
+        }
+        cout<<sum<<endl;
     }
 }
 
 int32_t main(){
     int t=1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }

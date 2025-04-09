@@ -28,17 +28,27 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    vi arr(n+1),vals(n);
+    forn(i,1,n+1) cin>>arr[i];
+    input(vals,n);
+    int res=0,a;
+    forn(i,0,n){
+        a=vals[i];
+        if(arr[a]!=-1){        
+            while(arr[a]!=-1){
+                int temp=arr[a];
+                arr[a]=-1;
+                res++;
+                a=temp;
+            }
+        }
+        cout<<res<<" ";
     }
+    cout<<endl;
 }
 
 int32_t main(){
-    int t=1;
+    int t;
     cin >> t;
     while (t--) {
         solve();

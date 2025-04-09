@@ -28,13 +28,28 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    if(n==1) cout<<0<<endl;
-    else if(n<=4) cout<<1<<endl;
-    else {
-        int curr=(sqrt(n));
-        if(curr*curr<n) curr++;
-        cout<<curr-1<<endl;
+    vector<pii> arr;
+    forn(i,0,n){
+        int a;
+        cin>>a;
+        if(a<i+1) arr.pb({a,i+1});//only valid ones
     }
+    sort(all(arr));
+    ordered_set<int> idx;
+    int res=0,i=0,j;
+    n=arr.size();
+    while(i<n){
+        j=i;
+        while(j<n && arr[j].first==arr[i].first){
+            res += idx.order_of_key(min(arr[j].first, arr[j].second)); // min because index as well as value both should be greater
+            j++;
+        }
+        forn(k,i,j){// inserting at the end after precessing all with same value
+            idx.insert(arr[k].second); // storing only index because values are alrrady in sorted order so no need
+        }
+        i=j;
+    }
+    cout<<res<<endl;
 }
 
 int32_t main(){

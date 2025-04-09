@@ -39,10 +39,10 @@ void solve() {
         b_idx[b[i]]=i;
         if(a[i]==b[i]){ barabar=i; s++;}
     }
-    if(s==n || (n%2==0 && s!=0) || (n%2 && s!=1)) { cout<<-1<<endl; return;}
+    if(s==n || (n%2==0 && s) || (n&2 && s!=1)) { cout<<-1<<endl; return;}
     vector<pii> res;
     int mid_s=(n-s)/2+1;
-    if(barabar!=-1 && barabar!=mid_s){
+    if(barabar!=mid_s){
         swap(a_idx[a[barabar]],a_idx[a[mid_s]]);
         swap(b_idx[b[barabar]],b_idx[b[mid_s]]);
         swap(a[barabar],a[mid_s]);
@@ -69,21 +69,10 @@ void solve() {
 }
 
 int32_t main(){
-    int t;
-    cin >>t;
-    while(t--)
-    {
-        string s; 
-        cin >> s;
-        long long cnt = 0, z = 0;
-        for(auto c : s){
-            if(c == '0'){
-                z++;
-            } else {
-                cnt = max(cnt , z+1LL);
-            }
-        }
-        cout << s.size() - cnt << "\n";
+    int t=1;
+    cin >> t;
+    while (t--) {
+        solve();
     }
     return 0;
 }
