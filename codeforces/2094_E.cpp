@@ -26,25 +26,42 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve(){
-    int a,n;
-    cin>>a>>n;
-    vector<pii> arr(n);
-    forn(i,0,n){
-        cin>>arr[i].first>>arr[i].second;
-    }
-    struct comp{
-        bool operator()(pii &a,pii &b){
-            if((a.second*1.0)/a.first==(b.second*1.0)/b.first) return a.first>b.first;
-            else return (a.second*1.0)/a.first==(b.second*1.0)/b.first;
+    int n, sum = 0;
+    cin >> n;
+    vector<vi> arr(n, vi(31, 0));
+    vi mp(31, 0);
+    forn(i, 0, n){
+        int a, j = 0;
+        cin >> a;
+        sum += a;
+        while (a){
+            if (a & 1){
+                arr[i][j]++;
+                mp[j]++;
+            }
+            j++;
+            a = a >> 1;
         }
     }
+    int mm = 0, curr;
+    forn(i, 0, n){
+        curr = 0;
+        forn(j, 0, 31){
+            if (arr[i][j] == 1){
+                // cout<<(n - 2*mp[j])<<" dv"<<endl;
+                curr += (n - 2*mp[j]) * (pow(2, j));
+            }
+        }
+        mm = max(mm, sum + curr);
+    }
+    cout << mm << endl;
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--){
         solve();
     }

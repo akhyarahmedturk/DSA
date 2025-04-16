@@ -25,17 +25,46 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve(){
-    int a,n;
-    cin>>a>>n;
-    vector<pii> arr(n);
-    forn(i,0,n){
-        cin>>arr[i].first>>arr[i].second;
+void solve() {
+    int n,m,k;
+    cin>>n>>m>>k;
+    int t=(n*m)/k;
+    if(m%k==0){
+        forn(i,0,n/2){
+            int a=1;
+            forn(j,0,m){
+                cout<<a<<" ";
+                a++;
+                if(a>k) a=1;
+            }
+            cout<<endl;
+            a=2;
+            forn(j,0,m){
+                cout<<a<<" ";
+                a++;
+                if(a>k) a=1;
+            }
+            cout<<endl;
+        }
+        if(n%2==1){
+            int a=1;
+            forn(j,0,m){
+                cout<<a<<" ";
+                a++;
+                if(a>k) a=1;
+            }
+            cout<<endl;
+        }
     }
-    struct comp{
-        bool operator()(pii &a,pii &b){
-            if((a.second*1.0)/a.first==(b.second*1.0)/b.first) return a.first>b.first;
-            else return (a.second*1.0)/a.first==(b.second*1.0)/b.first;
+    else{
+        int a=1;
+        forn(i,0,n){
+            forn(j,0,m){
+                cout<<a<<" ";
+                a++;
+                if(a>k) a=1;
+            }
+            cout<<endl;
         }
     }
 }
@@ -43,9 +72,9 @@ void solve(){
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
-    int t = 1;
-    // cin >> t;
-    while (t--){
+    int t=1;
+    cin >> t;
+    while (t--) {
         solve();
     }
     return 0;

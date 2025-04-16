@@ -1,0 +1,1 @@
+{"name":"Local: 1294_C","url":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1294_C.cpp","tests":[{"id":1744358335870,"input":"5\n64\n32\n97\n2\n12345\n","output":"YES\n2 4 8 \nNO\nNO\nNO\nYES\n3 5 823 \n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1294_C.cpp","group":"local","local":true}

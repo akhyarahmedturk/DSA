@@ -26,18 +26,11 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve(){
-    int a,n;
-    cin>>a>>n;
-    vector<pii> arr(n);
-    forn(i,0,n){
-        cin>>arr[i].first>>arr[i].second;
-    }
-    struct comp{
-        bool operator()(pii &a,pii &b){
-            if((a.second*1.0)/a.first==(b.second*1.0)/b.first) return a.first>b.first;
-            else return (a.second*1.0)/a.first==(b.second*1.0)/b.first;
-        }
-    }
+    vi a(3);
+    cin >> a[0] >> a[1] >> a[2];
+    sort(all(a));
+    int res = min(a[0] + a[1], (a[0] + a[1] + a[2]) / 3);
+    cout << res << endl;
 }
 
 int32_t main(){

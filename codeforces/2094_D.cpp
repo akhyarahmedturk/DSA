@@ -25,27 +25,30 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve(){
-    int a,n;
-    cin>>a>>n;
-    vector<pii> arr(n);
-    forn(i,0,n){
-        cin>>arr[i].first>>arr[i].second;
+
+void solve() {
+    string a,b;
+    cin>>a>>b;
+    int i=0,j=0,m=a.length(),n=b.length();
+    if(m>n || m*2<n){ yesno(false); return;}
+    while(i<m && j<n){
+        if(a[i]!=b[j]) { yesno(false); return;}
+        int x=1,y=1;
+        while(i+x<m && a[i+x]==a[i]) x++;
+        while(j+y<n && b[j+y]==b[j]) y++;
+        if(x>y || x*2<y) { yesno(false); return;}
+        i+=x;
+        j+=y;
     }
-    struct comp{
-        bool operator()(pii &a,pii &b){
-            if((a.second*1.0)/a.first==(b.second*1.0)/b.first) return a.first>b.first;
-            else return (a.second*1.0)/a.first==(b.second*1.0)/b.first;
-        }
-    }
+    yesno(i==m && j==n);
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
-    int t = 1;
-    // cin >> t;
-    while (t--){
+    int t=1;
+    cin >> t;
+    while (t--) {
         solve();
     }
     return 0;

@@ -25,27 +25,28 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve(){
-    int a,n;
-    cin>>a>>n;
-    vector<pii> arr(n);
-    forn(i,0,n){
-        cin>>arr[i].first>>arr[i].second;
-    }
-    struct comp{
-        bool operator()(pii &a,pii &b){
-            if((a.second*1.0)/a.first==(b.second*1.0)/b.first) return a.first>b.first;
-            else return (a.second*1.0)/a.first==(b.second*1.0)/b.first;
+void solve() {
+    int n,k;
+    cin>>n>>k;
+    if(k>=n){ cout<<1<<endl; return;}
+    if(k==1){ cout<<n<<endl; return;}
+    if(n%2==0 && n/2<=k){ cout<<2<<endl; return;}
+    int res=n;
+    for(int i=2;i*i<=n && i<=k && i<res;i++){
+        if(n%i==0){
+            if(n/i<=k) { cout<<i<<endl; return;}
+            res=n/i;
         }
     }
+    cout<<res<<endl;
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
-    int t = 1;
-    // cin >> t;
-    while (t--){
+    int t=1;
+    cin >> t;
+    while (t--) {
         solve();
     }
     return 0;

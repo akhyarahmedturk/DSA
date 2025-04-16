@@ -1,0 +1,1 @@
+{"name":"Local: 1364_B","url":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1364_B.cpp","tests":[{"id":1744347197853,"input":"2\n3\n3 2 1\n4\n1 3 4 2\n","output":"2\n3 1 \n3\n1 4 2 \n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\codeforces\\1364_B.cpp","group":"local","local":true}
