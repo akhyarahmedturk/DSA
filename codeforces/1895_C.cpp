@@ -25,52 +25,48 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve(){
-    int n, num, bits = 0;
-    cin >> n;
-    if (n <= 3){ cout << "Day " << n << ": Level = " <<0<<endl; return; }
-    num = n;
-    while (n){
-        bits++;
-        n = n >> 1;
+int res=0;
+
+void solve() {
+    int n,res=0;
+    cin>>n;
+    vector<pair<string,int>> vec(n);
+    vector<map<int,int>> mpp(6);
+    forn(i,0,n){
+        string s;
+        cin>>s;
+        int sum=0;
+        forn(j,0,s.length()) sum+=(s[j]-'0');
+        vec[i]={s,sum};
+        mpp[s.length()][sum]++;
     }
-    n = num;
-    int res = 0LL;
-    bits-=2LL;
-    if (bits >= 3LL){
-        int curr=1LL;
-        forn(i,0,3) curr*=bits-i;
-        res+=curr/6;
-    }
-    if (bits >= 6LL){
-        int curr=1LL;
-        forn(i,0,6) curr*=bits-i;
-        res+=curr/720;
-    }
-    if (bits >= 9LL){
-        int curr=1LL;
-        forn(i,0,9) curr*=bits-i;
-        res+=curr/362880LL;
-    }
-    int start = pow(2, bits);
-    while (start <= n){
-        int a = start, bb = 0LL;
-        while (a){
-            if (a & 1) bb++;
-            a = a >> 1;
+    forn(i,0,n){
+        int curr=0;
+        forn(j,0,vec[i].first.length()){
+            curr+=(vec[i].first[j]-'0');
+            if(j>=(vec[i].first.length())/2){
+                res+=mpp[2*(j+1)-vec[i].first.length()][2*curr-vec[i].second];
+            }
         }
-        if (bb % 3 == 0) res++;
-        start++;
+        curr=0;
+        reverse(all(vec[i].first));
+        forn(j,0,vec[i].first.length()-1){
+            curr+=(vec[i].first[j]-'0');
+            if(j>=(vec[i].first.length())/2){
+                res+=mpp[2*(j+1)-vec[i].first.length()][2*curr-vec[i].second];
+            }
+        }
+        // cout<<res<<endl;
     }
-    cout << "Day " << n << ": Level = " << res<<endl;
+    cout<<res<<endl;
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
-    int t = 3;
-    cin >> t;
-    while (t--){
+    int t=1;
+    // cin >> t;
+    while (t--) {
         solve();
     }
     return 0;

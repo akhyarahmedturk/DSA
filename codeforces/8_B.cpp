@@ -25,52 +25,38 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve(){
-    int n, num, bits = 0;
-    cin >> n;
-    if (n <= 3){ cout << "Day " << n << ": Level = " <<0<<endl; return; }
-    num = n;
-    while (n){
-        bits++;
-        n = n >> 1;
+void solve() {
+    string s;
+    cin>>s;
+    int x=0,y=0,n=s.length();
+    map<pii,int> mp;
+    mp[{x,y}]=-1;
+    bool ch=true;
+    forn(i,0,n){
+        if(s[i]=='R') x++;
+        else if(s[i]=='L') x--;
+        else if(s[i]=='U') y++;
+        else y--;
+        if((mp.find({x,y})!=mp.end())) ch=false;
+        else if((mp.find({x-1,y})!=mp.end()) && mp[{x-1,y}]!=i-1) ch=false;
+        else if((mp.find({x+1,y})!=mp.end()) && mp[{x+1,y}]!=i-1) ch=false;
+        else if((mp.find({x,y-1})!=mp.end()) && mp[{x,y-1}]!=i-1) ch=false;
+        else if((mp.find({x,y+1})!=mp.end()) && mp[{x,y+1}]!=i-1) ch=false;
+        mp[{x,y}]=i;
     }
-    n = num;
-    int res = 0LL;
-    bits-=2LL;
-    if (bits >= 3LL){
-        int curr=1LL;
-        forn(i,0,3) curr*=bits-i;
-        res+=curr/6;
-    }
-    if (bits >= 6LL){
-        int curr=1LL;
-        forn(i,0,6) curr*=bits-i;
-        res+=curr/720;
-    }
-    if (bits >= 9LL){
-        int curr=1LL;
-        forn(i,0,9) curr*=bits-i;
-        res+=curr/362880LL;
-    }
-    int start = pow(2, bits);
-    while (start <= n){
-        int a = start, bb = 0LL;
-        while (a){
-            if (a & 1) bb++;
-            a = a >> 1;
-        }
-        if (bb % 3 == 0) res++;
-        start++;
-    }
-    cout << "Day " << n << ": Level = " << res<<endl;
+    // int min_path=abs(y)+abs(x);
+    // if(x!=0 && y!=0) min_path--;
+    // cout<<min_path<<endl;
+    if(ch) cout<<"OK"<<endl;
+    else cout<<"BUG"<<endl;
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
-    int t = 3;
-    cin >> t;
-    while (t--){
+    int t=1;
+    // cin >> t;
+    while (t--) {
         solve();
     }
     return 0;

@@ -1,0 +1,1 @@
+{"name":"Local: 1447_B","url":"g:\\Shared drives\\DSA labs\\DSA\\1447_B.cpp","tests":[{"id":1741945727544,"input":"2\n2 2\n-1 1\n1 1\n3 4\n0 -1 -2 -3\n-1 -2 -3 -4\n-2 -3 -4 -5\n","output":"2\n30"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\1447_B.cpp","group":"local","local":true}

@@ -25,52 +25,41 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve(){
-    int n, num, bits = 0;
-    cin >> n;
-    if (n <= 3){ cout << "Day " << n << ": Level = " <<0<<endl; return; }
-    num = n;
-    while (n){
-        bits++;
-        n = n >> 1;
+
+
+void solve() {
+    int n,k;
+    cin>>n>>k;
+    vi arr1(n),arr2(n);
+    input(arr1,n);
+    input(arr2,n);
+    int mm=INT_MAX;
+    forn(i,0,n){
+        mm=min(mm,arr2[i]/arr1[i]);
     }
-    n = num;
-    int res = 0LL;
-    bits-=2LL;
-    if (bits >= 3LL){
-        int curr=1LL;
-        forn(i,0,3) curr*=bits-i;
-        res+=curr/6;
-    }
-    if (bits >= 6LL){
-        int curr=1LL;
-        forn(i,0,6) curr*=bits-i;
-        res+=curr/720;
-    }
-    if (bits >= 9LL){
-        int curr=1LL;
-        forn(i,0,9) curr*=bits-i;
-        res+=curr/362880LL;
-    }
-    int start = pow(2, bits);
-    while (start <= n){
-        int a = start, bb = 0LL;
-        while (a){
-            if (a & 1) bb++;
-            a = a >> 1;
+    int l=0,h=mm+k,mid,ans=0;
+    while(l<=h){
+        mid=(l+h)/2;
+        int a=mid,kk=k;
+        forn(i,0,n){
+            kk-=max(0LL,arr1[i]*mid-arr2[i]);
+            if(kk<0) break;
         }
-        if (bb % 3 == 0) res++;
-        start++;
+        if(kk>=0){
+            ans=mid;
+            l=mid+1;
+        }
+        else h=mid-1;
     }
-    cout << "Day " << n << ": Level = " << res<<endl;
+    cout<<ans<<endl;
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
-    int t = 3;
-    cin >> t;
-    while (t--){
+    int t=1;
+    // cin >> t;
+    while (t--) {
         solve();
     }
     return 0;
