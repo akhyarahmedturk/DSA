@@ -1,3 +1,9 @@
+/*
+*    Author: Akhyar Ahmed Turk
+*    Created: 2025-05-21 10:14 (GMT+5)
+
+*    brain["Motivation"].insert("Ya to win hy ya learn");
+*/
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -28,29 +34,12 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+    int i=1,count=1;
+    while(i<n){
+        count++;
+        i=2*i+2;
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
-    }
-    cout<<ans<<endl;
+    cout<<count<<endl;
 }
 
 int32_t main(){

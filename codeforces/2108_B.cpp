@@ -26,31 +26,39 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
-    cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+    int n,x,xx;
+    cin>>n>>x;
+    xx=x;
+    if(x==0){ 
+        if(n==1) cout<<-1<<endl;
+        else if(n%2==0) cout<<n<<endl;
+        else cout<<n-1+4<<endl;
+        return;
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
+    else if(x==1){ 
+        if(n==1) cout<<1<<endl;
+        else if(n&1) cout<<n<<endl;
+        else  cout<<n-1+4<<endl;
+        return;
+    }
+    int bits=0LL;
+    while(x){
+        if(x&1) bits++;
+        x=x>>1; 
+    }
+    // cout<<" b "<<bits<<endl;
+    if(bits>=n){
+        cout<<xx<<endl;
+    }
+    else{
+        int diff=n-bits;
+        if(diff%2==0) {
+            cout<<xx+diff<<endl;
         }
         else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
+            cout<<xx+diff+1<<endl;
         }
-        occupied++;
     }
-    cout<<ans<<endl;
 }
 
 int32_t main(){

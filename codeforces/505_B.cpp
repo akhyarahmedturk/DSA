@@ -1,3 +1,9 @@
+/*
+*    Author: Akhyar Ahmed Turk
+*    Created: 2025-05-22 22:19 (GMT+5)
+
+*    brain["Motivation"].insert("Ya to win hy ya learn");
+*/
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -8,6 +14,7 @@ template <typename T>
 using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 // use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
 // idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
+// idx.find_by_order(n); to get the nth value by order
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
@@ -25,39 +32,49 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+void DFS(int vertex,int col,int target,vector<map<int,vector<int>>> &graph,set<int> & st,set<int> & vis){
+    if(vertex==target) {st.insert(col); return;}
+    vis.insert(vertex);
+    for(auto it:graph[vertex][col]){
+        if(vis.find(it)==vis.end()) DFS(it,col,target,graph,st,vis);
+    }
+    vis.erase(vertex);
+}
+
 void solve() {
-    int n;
-    cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+    int n,m;
+    cin>>n>>m;
+    vector<map<int,vector<int>>> graph(n);
+    forn(i,0,m){
+        int x,y,c;
+        cin>>x>>y>>c;
+        x--;
+        y--;
+        graph[x][c].push_back(y);
+        graph[y][c].push_back(x);
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
+    int q;
+    cin>>q;
+    while(q--){
+        int a,b;
+        cin>>a>>b;
+        a--;
+        b--;
+        set<int> st,vis;
+        for(auto it:graph[a]){
+            for(auto itt:it.second){
+                DFS(itt,it.first,b,graph,st,vis);
+            }
         }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
+        cout<<st.size()<<endl;
     }
-    cout<<ans<<endl;
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
     int t=1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }

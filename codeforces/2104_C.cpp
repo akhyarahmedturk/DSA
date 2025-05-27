@@ -12,7 +12,7 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
 #define pii pair<int, int>
-// #define mp make_pair
+#define mp make_pair
 #define pb push_back
 #define vi vector<int>
 #define all(a) a.begin(), a.end()
@@ -25,32 +25,50 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+vector<int> primeNums( int n ) {
+    vector<bool> isPrime( n + 1 , true ) ;
+    isPrime[0] = isPrime[1] = false;
+    for( int i = 2 ; i * i <= n ; i++ ) {
+        if( isPrime[i] ) {
+            for( int j = i * i ; j <= n ; j += i )
+                isPrime[j] = false ;
+        }
+    }
+
+    vector<int> primes;
+    for( int i = 2 ; i <= n ; i++ )
+        if( isPrime[i] ) {
+            cout << i << " " ;
+            primes.push_back( i ) ;
+        }
+        
+    return primes ;
+}
+vi primes;
+
 void solve() {
     int n;
     cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+    string a;
+    cin>>a;
+    if(n==2 || ((a[0]==a[n-1] || a[0]==a[n-2]) && a[0]=='B')){
+        if(a[0]=='A') cout<<"Alice"<<endl;
+        else cout<<"Bob"<<endl;
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
+    else{
+        int count=0;
+        forn(i,0,n){
+            if(a[i]=='A') count++;
         }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
+        if(a[n-1]=='A'){
+            if(count>1) cout<<"Alice"<<endl;
+            else cout<<"Bob"<<endl;
         }
         else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
+            if(count<n-1) cout<<"Bob"<<endl;
+            else cout<<"Alice"<<endl;
         }
-        occupied++;
     }
-    cout<<ans<<endl;
 }
 
 int32_t main(){
@@ -58,6 +76,7 @@ int32_t main(){
 //cin.tie(NULL);
     int t=1;
     cin >> t;
+    primes=primeNums(1e5);
     while (t--) {
         solve();
     }

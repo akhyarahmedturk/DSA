@@ -1,3 +1,9 @@
+/*
+*    Author: Akhyar Ahmed Turk
+*    Created: 2025-05-17 20:47 (GMT+5)
+
+*    brain["Motivation"].insert("Ya to win hy ya learn");
+*/
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -26,31 +32,32 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
+    int n,c;
     cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
-    }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
-    }
-    cout<<ans<<endl;
+    cout << "digit" << endl;
+    cout.flush();
+    cin>>c;
+    cout << "digit" << endl;
+    cout.flush();
+    cin>>c;
+    cout << "add -8" << endl;
+    cout.flush();
+    cin>>c;
+    cout << "add -4" << endl;
+    cout.flush();
+    cin>>c;
+    cout << "add -2" << endl;
+    cout.flush();
+    cin>>c;
+    cout << "div 2" << endl;
+    cout.flush();
+    cin>>c;
+    cout << "mul "<<n << endl;
+    cout.flush();
+    cin>>c;
+    cout << "!"<< endl;
+    cout.flush();
+    cin>>c;
 }
 
 int32_t main(){

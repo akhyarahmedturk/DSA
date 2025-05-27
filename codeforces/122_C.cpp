@@ -25,39 +25,48 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+void sol(string a,int n,vector<int> &st,int &idx){
+    int num=stoll(a);
+    st[idx]=num;
+    // st.push_back(num);
+    idx++;
+    if(num>n) return;
+    a+='4';
+    sol(a,n,st,idx);
+    a[a.size()-1]='7';
+    sol(a,n,st,idx);
+}
+
 void solve() {
-    int n;
-    cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
-    }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
+    int n=1e10;
+    vector<int> st(4094);
+    int idx=0;
+    sol("4",n,st,idx);
+    sol("7",n,st,idx);
+    sort(all(st));
+    int l,r;
+    cin>>l>>r;
+    int i=0,res=0,prv=l-1;
+    while(st[i]<l) i++;
+    while(1){
+        if(st[i]<=r) {
+            res+=(st[i]*(st[i]-prv));
+            i++;
         }
         else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
+            res+=(st[i]*(r-prv));
+            break;
         }
-        occupied++;
-    }
-    cout<<ans<<endl;
+        prv=st[i-1];
+    } 
+    cout<<res<<endl;
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
     int t=1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }

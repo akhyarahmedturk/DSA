@@ -25,32 +25,42 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+
+
 void solve() {
     int n;
     cin>>n;
-    vi arr(n);
+    string a;
+    cin>>a;
+    int st=0,end=n-1,i=0,cost=0;
+    bool ch=true;
     forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
-    }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
+        if(a[i]=='0'){
+            if(ch) cost++;
+            else{
+                cost+=2;
+                ch=!ch;
+            }
         }
         else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
+            if(!ch) cost++;
+            else{
+                cost+=2;
+                ch=!ch;
+            }
         }
-        occupied++;
     }
-    cout<<ans<<endl;
+    while(st<n && a[st]!='1') st++;
+    if(st>=n-1){ cout<<cost<<endl; return;}
+    int next=st+1;
+    bool zero=false;
+    while(next<n && !(a[next-1]=='0' && a[next]=='1')) {
+        if(a[next]=='0') zero=true;
+        next++;
+    }
+    if(!zero){ cout<<cost<<endl; return;}
+    if(next==n){ cout<<cost-1<<endl; return;}
+    cout<<cost-2<<endl;
 }
 
 int32_t main(){

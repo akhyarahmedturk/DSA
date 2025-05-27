@@ -29,28 +29,20 @@ void solve() {
     int n;
     cin>>n;
     vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+    input(arr,n);
+    if(n==1) { cout<<arr[0]<<endl; return;}
+    multiset<int> st;
+    forn(i,0,n) st.insert(arr[i]);
+    int sum=0;
+    forr(i,n-1,1){
+        sum+=arr[i];
+        st.erase(st.find(arr[i]));
+        if(arr[i]>(*st.rbegin())) cout<<sum<<" ";
+        else {
+            cout<<sum-arr[i]+(*st.rbegin())<<" ";
+        }
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
-    }
-    cout<<ans<<endl;
+    cout<<sum+arr[0]<<endl;
 }
 
 int32_t main(){

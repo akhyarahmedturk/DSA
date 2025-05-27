@@ -25,34 +25,54 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve() {
+void solve(){
     int n;
-    cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
-    }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
+    cin >> n;
+    ordered_set<int> a, b;
+    int par1=0,par2=0;
+    forn(i, 0, n){
+        int x;
+        cin >> x;
+        if (i % 2 == 0){
+            par1+=(a.size()-a.order_of_key(x));
+            a.insert(x);
         }
         else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
+            par2+=(b.size()-b.order_of_key(x));
+            b.insert(x);
         }
-        occupied++;
+        // cout<<par1<<" "<<par2<<endl;
     }
-    cout<<ans<<endl;
+    auto x=a.begin(),y=b.begin();
+    if(par1%2==par2%2){
+        forn(i,0,n){
+            if(i%2==0){
+                cout<<*x<<" ";
+                x++;
+            }
+            else{
+                cout<<*y<<" ";
+                y++;
+            }
+        }
+        cout<<endl;
+    }
+    else{
+        forn(i,0,n-3){
+            if(i%2==0){
+                cout<<*x<<" ";
+                x++;
+            }
+            else{
+                cout<<*y<<" ";
+                y++;
+            }
+        }
+        if(x==a.rbegin()) cout<<*b.rbegin()<<" "<<*x<<" "<<*y<<endl;
+        else cout<<*a.rbegin()<<" "<<*y<<" "<<*x<<endl;
+    }
+    
 }
-
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);

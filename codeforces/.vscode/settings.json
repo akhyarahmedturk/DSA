@@ -10,6 +10,9 @@
         "string_view": "cpp",
         "span": "cpp",
         "stacktrace": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "iostream": "cpp",
+        "random": "cpp",
+        "*.tcc": "cpp"
     }
 }

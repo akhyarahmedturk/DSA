@@ -28,29 +28,32 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    vi arr(n);
+    map<int,vi> mp;
     forn(i,0,n){
         int a;
         cin>>a;
-        arr[a]=i;
+        mp[a].push_back(i);
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
+    vector<bool> vec(n,false);
+    int res=0LL;
+    for(auto it=mp.rbegin(); it!=mp.rend(); it++){
+        int start=it->second[0];
+        int size=it->second.size();
+        vec[it->second[0]]=true;
+        forn(i,1,size){
+            vec[it->second[i]]=true;
+            if(it->second[i]!=it->second[i-1]+1){
+                int end=it->second[i-1];
+                if((start!=0 && vec[start-1]) || (end!=n-1 && vec[end+1])) res=res;
+                else res++;
+                start=it->second[i];
+            }
         }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
+        int end=it->second[size-1];
+        if((start!=0 && vec[start-1]) || (end!=n-1 && vec[end+1])) res=res;
+        else res++;
     }
-    cout<<ans<<endl;
+    cout<<res<<endl;
 }
 
 int32_t main(){

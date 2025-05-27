@@ -1,3 +1,9 @@
+/*
+*    Author: Akhyar Ahmed Turk
+*    Created: 2025-05-24 19:11 (GMT+5)
+
+*    brain["Motivation"].insert("Ya to win hy ya learn");
+*/
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -8,6 +14,7 @@ template <typename T>
 using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 // use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
 // idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
+// idx.find_by_order(n); to get the nth value by order
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
@@ -29,28 +36,14 @@ void solve() {
     int n;
     cin>>n;
     vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
-    }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
-    }
-    cout<<ans<<endl;
+    input(arr,n);
+    sort(all(arr));
+    if((arr[0]+arr.back())%2==0) { cout<<0<<endl; return;}
+    int b=1,c=1;
+    while(b<n && arr[b]%2==arr[0]%2) b++;
+    if(b==n){ cout<<n-1<<endl; return;}
+    while(c<n && arr[n-c-1]%2==arr.back()%2) c++;
+    cout<<min(b,c)<<endl;
 }
 
 int32_t main(){

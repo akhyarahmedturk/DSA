@@ -28,29 +28,25 @@ const int inf = 1e17 + 1;
 void solve() {
     int n;
     cin>>n;
-    vi arr(n);
+    map<int,int> mp;
     forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+        int x;
+        cin>>x;
+        mp[x]++;
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
+    int val=-3,prv=0;
+    for(auto it:mp){
+        if(it.second==1){
+            if(it.first!=val+1) prv=0;
         }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
+        else if(it.second==2 || it.second==3){
+            if(it.first==val+1 && prv) { yesno(true); return;}
+            prv=1;
         }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
+        else { yesno(true); return;}
+        val=it.first;
     }
-    cout<<ans<<endl;
+    yesno(false);
 }
 
 int32_t main(){

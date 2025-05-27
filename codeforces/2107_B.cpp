@@ -26,31 +26,30 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
-    cin>>n;
-    vi arr(n);
+    int n,k;
+    cin>>n>>k;
+    int mm=inf,sum=0;
+    pii mx={0LL,0LL};
     forn(i,0,n){
         int a;
         cin>>a;
-        arr[a]=i;
+        sum+=a%2;
+        mm=min(mm,a);
+        if(a==mx.first) mx.second++;
+        else if(a>mx.first) mx={a,1};
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
+    if(mx.first-mm>k+1) { cout<<"Jerry"<<endl; return;}
+    else if(mx.first-mm==k+1){
+        if(mx.second==1) { 
+            if(sum&1) { cout<<"Tom"<<endl; return;}
+            else { cout<<"Jerry"<<endl; return;}
         }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
+        else { cout<<"Jerry"<<endl; return;}
     }
-    cout<<ans<<endl;
+    else {
+        if(sum&1) { cout<<"Tom"<<endl; return;}
+        else { cout<<"Jerry"<<endl; return;}
+    }
 }
 
 int32_t main(){

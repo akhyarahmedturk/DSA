@@ -1,3 +1,9 @@
+/*
+*    Author: Akhyar Ahmed Turk
+*    Created: 2025-05-24 19:53 (GMT+5)
+
+*    brain["Motivation"].insert("Ya to win hy ya learn");
+*/
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -8,6 +14,7 @@ template <typename T>
 using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 // use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
 // idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
+// idx.find_by_order(n); to get the nth value by order
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
@@ -29,28 +36,34 @@ void solve() {
     int n;
     cin>>n;
     vi arr(n);
+    vector<pii> r(n);
+    vector<pii> pr(n+1,{0,0});
+    input(arr,n);
     forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+        cin>>r[i].first>>r[i].second;
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
+    forn(i,1,n+1){
+        pr[i]=pr[i-1];
+        if(arr[i-1]==1) {pr[i].first++; pr[i].second++;}
+        if(arr[i-1]==-1) pr[i].second++;
+        pr[i].first=max(pr[i].first,r[i-1].first);
+        pr[i].second=min(pr[i].second,r[i-1].second);
+        if(pr[i].first>pr[i].second) {cout<<-1<<endl; return;}
     }
-    cout<<ans<<endl;
+    int pos=pr[n].second;
+    forr(i,n-1,1){
+        if(arr[i]==-1){
+            if(pos<=pr[i].second) arr[i]=0;
+            else {arr[i]=1; pos--;}
+        }
+        else pos-=arr[i];
+    }
+    if(arr[0]==-1){
+        if(pos>0) arr[0]=1;
+        else arr[0]=0;
+    }
+    forn(i,0,n) cout<<arr[i]<<" ";
+    cout<<endl;
 }
 
 int32_t main(){

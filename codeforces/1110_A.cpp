@@ -26,38 +26,26 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
-    cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+    int b,k,count=0;
+    cin>>b>>k;
+    vi arr(k);
+    input(arr,k);
+    forn(i,0,k){
+        if(arr[i]%2==1) count++;
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
+    if(b%2==0 ){
+        if(arr.back()%2==0) cout<<"even"<<endl;
+        else cout<<"odd"<<endl;
     }
-    cout<<ans<<endl;
+    else if(count%2==0) cout<<"even"<<endl;
+    else cout<<"odd"<<endl;
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
     int t=1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }

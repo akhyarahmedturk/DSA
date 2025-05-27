@@ -25,40 +25,36 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve() {
+void solve(){
     int n;
-    cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+    cin >> n;
+    vector<vi> arr(n, vi(n));
+    int num = n * n - 1, x1 = 0, x2 = n - 1;
+    while (num >= 0 && x2 >= x1){
+        forn(i, x1, x2 + 1){ arr[x1][i] = num; num--; }
+        if (num == -1) break;
+        forn(i, x1 + 1, x2 + 1){ arr[i][x2] = num; num--; }
+
+        forr(i, x2 - 1, x1){ arr[x2][i] = num; num--; }
+
+        forr(i, x2 - 1, x1 + 1){ arr[i][x1] = num; num--; }
+        x1++;
+        x2--;
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
+    forn(i, 0, n){
+        forn(j, 0, n){
+            cout << arr[i][j] << " ";
         }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
+        cout << endl;
     }
-    cout<<ans<<endl;
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
-    int t=1;
+    int t = 1;
     cin >> t;
-    while (t--) {
+    while (t--){
         solve();
     }
     return 0;

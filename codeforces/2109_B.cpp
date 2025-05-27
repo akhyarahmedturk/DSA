@@ -1,3 +1,9 @@
+/*
+*    Author: Akhyar Ahmed Turk
+*    Created: 2025-05-17 19:57 (GMT+5)
+
+*    brain["Motivation"].insert("Ya to win hy ya learn");
+*/
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -26,31 +32,41 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n;
-    cin>>n;
-    vi arr(n);
-    forn(i,0,n){
-        int a;
-        cin>>a;
-        arr[a]=i;
+    int nn,mm,a,b;
+    cin>>nn>>mm>>a>>b;
+    // int count=1;
+    vi arr(4,1);
+    int n,m;
+    n=nn-(a-1);
+    m=mm;
+    while(m>1 || n>1){
+        arr[0]++;
+        if((m/2)*n >= (n/2)*m) m=(m+1)/2;
+        else n=(n+1)/2;
     }
-    if(n==0){ cout<<1<<endl; return;}
-    int l=arr[0],r=arr[1],ans=1,occupied=0;
-    if(l>r) swap(l,r);// current range is from l+1 to r-1
-    occupied=2; // currently 2 places are occupied
-    forn(i,2,n){
-        if(arr[i]<l){
-            l=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else if(arr[i]>r){
-            r=arr[i]; // not in range so cannot place anywhere elece except original pos
-        }
-        else{
-            ans= (ans*(r-l+1-occupied))%mod; // can place anywhere in range
-        }
-        occupied++;
+    m=mm-(b-1);
+    n=nn;
+    while(m>1 || n>1){
+        arr[1]++;
+        if((m/2)*n >= (n/2)*m) m=(m+1)/2;
+        else n=(n+1)/2;
     }
-    cout<<ans<<endl;
+    m=mm-(mm-b);
+    n=nn;
+    while(m>1 || n>1){
+        arr[2]++;
+        if((m/2)*n >= (n/2)*m) m=(m+1)/2;
+        else n=(n+1)/2;
+    }
+    m=mm;
+    n=nn-(nn-a);
+    while(m>1 || n>1){
+        arr[3]++;
+        if((m/2)*n >= (n/2)*m) m=(m+1)/2;
+        else n=(n+1)/2;
+    }
+    sort(all(arr));
+    cout<<arr[0]<<endl;
 }
 
 int32_t main(){
