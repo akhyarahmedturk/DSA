@@ -1,85 +1,80 @@
-#include<iostream>
-#include<vector>
-#include<stack>
-#include<queue>
-#include<unordered_map>
-#include<unordered_set>
-#include<algorithm>
-using namespace std;
-using p=pair<long long, int>;
-using pp=pair<pair<long long, long long>, bool>;
+/*
+*    Author: Akhyar Ahmed Turk
+*    Created: 2025-07-16 17:19 (GMT+5)
 
-long long dijkstra(int src,int dst,unordered_map<int,p> &main_cities,unordered_map<int,p> &cities) { // not solved yet
-    int n=cities.size();
-    vector<long long> dist(n,LLONG_MAX);
-    priority_queue<p,vector<p>, greater<p>> pq;
-    pq.push({0LL,src});
-    dist[src]=0LL;
-    while(pq.size()){
-        long long d=pq.top().first;
-        int vertex=pq.top().second;
-        cout<<" vertex "<<vertex<<" d "<<d<<endl;
-        bool is_main=false;
-        long long x,y;
-        if(main_cities.find(vertex)!=main_cities.end()){
-            is_main=true;
-            x=main_cities[vertex].first; 
-            y=main_cities[vertex].second;
-            main_cities.erase(vertex);
-        }
+*    brain["Motivation"].insert("Ya to win hy ya learn");
+*/
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+// use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
+// idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
+// idx.find_by_order(n); to get the nth value by order
+#define int long long
+#define ld long double
+#define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
+#define pii pair<int, int>
+// #define mp make_pair
+#define pb push_back
+#define f first
+#define ss second
+#define vi vector<int>
+#define all(a) a.begin(), a.end()
+#define allr(a) a.rbegin(), a.rend()
+#define mod 1000000007
+#define mod2 998244353
+const int inf = 1e17 + 1;
+
+#define forn(i, a, b) for (int i = a; i < b; i++)
+#define forr(i, a, b) for (int i = a; i >= b; i--)
+#define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
+
+void solve() {
+    int n,k,a,b;
+    cin>>n>>k>>a>>b;
+    vector<pii> arr(n);
+    forn(i,0,n) cin>>arr[i].first>>arr[i].second;
+    a--; b--; k--;
+    int res=LONG_LONG_MAX;
+    if(a<=k){
+        if(b<=k) res=0;
         else{
-            x=cities[vertex].first; 
-            y=cities[vertex].second;
-            cities.erase(vertex);
-        }
-        cout<<"is_main: "<<is_main<<endl;
-        pq.pop();
-        if(d>dist[vertex]) continue;
-        if(is_main){
-            for(auto it:main_cities){
-                if(d<dist[it.first]){
-                    dist[it.first]=d;
-                    pq.push({d,it.first});
-                }
-            }
-        }
-        else{
-            for(auto it:main_cities){
-                long long cost=d + abs(it.second.first-x) + abs(it.second.second-y);
-                if(d<dist[it.first]){
-                    dist[it.first]=d;
-                    pq.push({d,it.first});
-                }
-            }
-        }
-        for(auto it:cities){
-            long long cost=d + abs(it.second.first-x) + abs(it.second.second-y);
-            if(d<dist[it.first]){
-                dist[it.first]=d;
-                pq.push({d,it.first});
+            forn(i,0,k+1){
+                res=min(res,abs(arr[i].first-arr[b].first)+abs(arr[i].second-arr[b].second));
             }
         }
     }
-    return dist[dst];
+    else if(b<=k){
+        forn(i,0,k+1){
+            res=min(res,abs(arr[i].first-arr[a].first)+abs(arr[i].second-arr[a].second));
+        }
+    }
+    else{
+        res=abs(arr[a].first-arr[b].first)+abs(arr[a].second-arr[b].second);
+        int l=1e17,m=1e17;
+        forn(i,0,k+1){
+            l=min(l,abs(arr[i].first-arr[a].first)+abs(arr[i].second-arr[a].second));
+        }
+        forn(i,0,k+1){
+            m=min(m,abs(arr[i].first-arr[b].first)+abs(arr[i].second-arr[b].second));
+        }
+        res=min(res,l+m);
+    }
+    cout<<res<<endl;
 }
-int main(){
-    int t;
-    cin>>t;
-    while(t--){
-        long long n,k,a,b;
-        cin>>n>>k>>a>>b;
-        unordered_map<int,p> main_cities,cities;
-        for(long long i=0;i<k;i++){
-            long long x,y;
-            cin>>x>>y;
-            main_cities[i]={x,y};
-        }
-        for(long long i=k;i<n;i++){
-            long long x,y;
-            cin>>x>>y;
-            cities[i]={x,y};
-        }
-        cout<<dijkstra(a-1,b-1,main_cities,cities)<<endl;
+
+int32_t main(){
+//ios_base::sync_with_stdio(false);
+//cin.tie(NULL);
+    int t=1;
+    cin >> t;
+    while (t--) {
+        solve();
     }
     return 0;
 }

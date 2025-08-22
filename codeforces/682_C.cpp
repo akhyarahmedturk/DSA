@@ -37,6 +37,7 @@ int DFS(int v,int par,vector<vector<pii>> &graph,vi &values,int curr){
             }
         }
     }
+
     return count;   
 } 
 
@@ -53,7 +54,6 @@ void solve() {
         graph[i].pb({v,val});
         graph[v].pb({i,val});
     }
-    // cout<<"v ";
     cout<<n-DFS(0,-1,graph,arr,0LL)<<endl;
 }
 

@@ -32,14 +32,26 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    
+    int n,m,k;
+    cin>>n>>m>>k;
+    vi arr(n),diff(n-1);
+    input(arr, n);
+    forn(i, 1, n) {
+        diff[i-1] = arr[i] - arr[i-1]-1;
+    }
+    sort(all(diff));
+    int ans = n;
+    forn(i, 0, n-k) {
+        ans += diff[i];
+    }
+    cout << ans << "\n";
 }
 
 int32_t main(){
 //ios_base::sync_with_stdio(false);
 //cin.tie(NULL);
     int t=1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }
