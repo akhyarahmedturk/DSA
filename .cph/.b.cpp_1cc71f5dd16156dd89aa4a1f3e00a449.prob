@@ -1,1 +1,0 @@
-{"name":"Local: b","url":"g:\\Shared drives\\DSA labs\\DSA\\b.cpp","tests":[{"id":1742668007591,"input":"ggppgggpgg\n","output":"2"},{"id":1742757980653,"input":"gpg\n","output":"0"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\b.cpp","group":"local","local":true}

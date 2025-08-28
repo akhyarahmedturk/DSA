@@ -1,1 +1,0 @@
-{"name":"Local: coderunner","url":"g:\\Shared drives\\DSA labs\\DSA\\coderunner.cpp","tests":[{"id":1742665996721,"input":"5\n7 5 2 5 2\n","output":"2"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"g:\\Shared drives\\DSA labs\\DSA\\coderunner.cpp","group":"local","local":true}
