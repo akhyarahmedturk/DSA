@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-07 22:09 (GMT+5)
+*    Created: 2025-09-03 18:32 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -33,25 +33,36 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
-    int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
+void solve() {
+    int n,m; cin>>n>>m;
+    // bs ?
+    vector<pii> arr(m); 
+    forn(i,0,m) cin>>arr[i].f>>arr[i].ss;
+    int q; cin>>q;
+    vi ya(q); input(ya,q);
+    int l=1,r=q,mid,res=-1;
+    while(l<=r){
+        ordered_set<int> st;
+        mid=(l+r)/2;
+        forn(i,0,mid) st.insert(ya[i]);
+        bool ch=false;
+        forn(i,0,m){
+            int aa=st.order_of_key(arr[i].ss+1)-st.order_of_key(arr[i].f);
+            if(aa>(arr[i].ss-arr[i].f+1)/2) { ch=true; break;}
+        }
+        if(ch){ res=mid; r=mid-1;}
+        else l=mid+1; 
+    }
     cout<<res<<endl;
 }
-//13 3,10 6, 4 12,8,8 
-// 7 9,14 2, 12 4,8 8
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
     cin >> t;
-    forn(i,0,t) {
-        solve(i);
+    while (t--) {
+        solve();
     }
     return 0;
 }

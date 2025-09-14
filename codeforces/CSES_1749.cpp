@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-07 22:09 (GMT+5)
+*    Created: 2025-09-11 12:51 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -33,25 +33,57 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+struct BIT {
+    int n;
+    vi bit;
+    BIT(int nn) {
+        n = nn;
+        bit.assign(n + 2, 0);
+    }
+    // Point update: add 'val' to index 'i'
+    void update(int i,int val) { //bit[i]+=x;
+        while (i <= n) {
+            bit[i]+=val;
+            i += i & -i;
+        }
+    }
+    // Prefix sum: sum[1...i]
+    int query(int i) {
+        int res=0;
+        while (i > 0) {
+            res+=bit[i];
+            i -= i & -i;
+        }
+        return res;
+    }
+};
 
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
-    int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
-    cout<<res<<endl;
+void solve() {
+    int n,k; cin>>n;
+    vi arr(n),ya(n); input(arr,n); input(ya,n);
+    BIT bit(n+2);
+    forn(i,0,n){
+        int x=ya[i]+bit.query(ya[i]+1);
+        bit.update(ya[i]+1,1);
+        if(i!=0 && ya[i-1]>=ya[i]) { bit.update(ya[i-1],1); bit.update(ya[i-1]+1,-1);}
+        cout<<arr[x-1]<<" ";
+    }
+    cout<<endl; 
 }
-//13 3,10 6, 4 12,8,8 
-// 7 9,14 2, 12 4,8 8
+// 2 6 1 4 2
+// 3-> 2 6 4 2 [0,0,1,1,0] 1
+// 1-> 6 4 2   [1,2,2,0,0] 2
+// 3-> 6 4     [1,2,0,0,0] 2
+// 1-> 4       [3,0,0,0,0] 6
+// 1->
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
-    cin >> t;
-    forn(i,0,t) {
-        solve(i);
+    // cin >> t;
+    while (t--) {
+        solve();
     }
     return 0;
 }

@@ -386,3 +386,24 @@ struct BIT {
         return res;
     }
 };
+
+// bridges in graph
+
+vvi res;
+vector<set<int>> graph;
+int DFS(int idx,vi &vis,vi &count){
+    vis[idx]=1;
+    int upper=0;// upper bhejna hy count
+    int nechy=0;// nechy sy mila
+    for(auto it:graph[idx]){
+        graph[it].erase(idx);
+        if(vis[it]) { upper++; count[it]++;}// it py subtract hoga
+        else {
+            int x=DFS(it,vis,count);
+            if(!x) res.pb({idx,it});
+            nechy+=x;//nechy sy mila
+        }
+    }
+    nechy-=count[idx];
+    return nechy+upper;
+}

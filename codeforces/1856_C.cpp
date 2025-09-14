@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-07 22:09 (GMT+5)
+*    Created: 2025-09-01 21:54 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -33,25 +33,46 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+vi arr;
+int n,k; 
 
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
-    int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
+bool ss(int val){
+    forn(i,0,n){
+        int kk=k,curr=val,j=i;
+        while(j<n){
+            if(arr[j]<curr) kk-=(curr-arr[j]);
+            else break;
+            curr--; j++;
+        }
+        if(j<n && kk>=0) return true;
+    }
+    return false;
+}
+
+void solve() {
+    cin>>n>>k;
+    arr.resize(n); input(arr,n);
+    int st=arr[0],end,mid,res;
+    forn(i,0,n) st=max(st,arr[i]);
+    end=st+k; res=st;
+    while(st<=end){
+        mid=(st+end)/2;
+        if(ss(mid)){
+            res=mid;
+            st=mid+1;
+        }
+        else end=mid-1;
+    }
     cout<<res<<endl;
 }
-//13 3,10 6, 4 12,8,8 
-// 7 9,14 2, 12 4,8 8
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
     cin >> t;
-    forn(i,0,t) {
-        solve(i);
+    while (t--) {
+        solve();
     }
     return 0;
 }

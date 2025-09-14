@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-07 22:09 (GMT+5)
+*    Created: 2025-09-13 19:33 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -33,25 +33,46 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
-    int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
+void solve() {
+    // int n,m,x,y; cin>>n>>m>>x>>y;
+    // int res=0;
+    // forn(i,0,n){
+    //     int a; cin>>a;
+    //     if(a<=x) res++;   
+    // }
+    // forn(i,0,m){
+    //     int a; cin>>a;
+    //     if(a<=y) res++;   
+    // }
+    // cout<<res<<endl;
+    int n,m; cin>>n>>m;
+    vector<pii> arr(n);
+    forn(i,0,n) cin>>arr[i].f>>arr[i].ss;
+    sort(all(arr));
+    int res=0,prv=0,idx=0;
+    forn(i,0,n){
+        int d=(arr[i].f-prv);
+        if(idx==arr[i].ss){
+            res+=(d/2)*2;
+        }
+        else{
+            if(d&1) res+=d;
+            else res+=d-1;
+        }
+        idx=arr[i].ss; prv=arr[i].f;
+    }
+    int d=(m-prv);
+    res+=d;
     cout<<res<<endl;
 }
-//13 3,10 6, 4 12,8,8 
-// 7 9,14 2, 12 4,8 8
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
     cin >> t;
-    forn(i,0,t) {
-        solve(i);
+    while (t--) {
+        solve();
     }
     return 0;
 }

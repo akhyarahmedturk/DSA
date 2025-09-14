@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-08-28 20:41 (GMT+5)
+*    Created: 2025-08-29 17:05 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -33,42 +33,69 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-int K=1e9;
-int ask(char ch){
-    cout<<"? "<<ch<<" "<<K<<endl;
-    int x; cin>>x; return x;
+vector<set<int>> graph;
+vector<vi> tree1;
+vector<set<int>> extra;
+bool res;
+
+void dfs_tree(int idx,vi & vis){
+    vis[idx]=1;
+    for(auto it:graph[idx]){
+        graph[it].erase(idx);
+        if(vis[it]) extra[idx].insert(it);
+        else{
+            tree1[idx].pb(it);
+            dfs_tree(it,vis);
+        }
+    }
+}
+
+
+int check(int idx,int p,vi & vis){
+    int c=0;
+    for(auto it:tree1[idx]){
+        int t=check(it,idx,vis);
+        if(!t){
+            res=false;
+            return 0; 
+        }
+        c+=t;
+    }
+    for(auto it:extra[idx]){
+        vis[it]++; c++;
+    }
+    c-=vis[idx];
+    return c;
 }
 
 void solve() {
-    int n; cin>>n;
-    int mx1=-2e9,mx2=-2e9;
-    forn(i,0,n){
-        int x,y; cin>>x>>y;
-        mx1=max(mx1,x+y); mx2=max(mx2,x-y);
+    int n,m; cin>>n>>m;
+    graph.assign(n,{}); tree1.assign(n,{}); extra.assign(n,{}); res=true;;
+    while(m--){
+        int a,b; cin>>a>>b; a--; b--;
+        graph[a].insert(b);
+        graph[b].insert(a);
     }
-    int t=ask('U');
-    t=ask('U');
-    t=ask('R');
-    t=ask('R');
-    int p1=mx1+t;// total dist from origin now
-    p1=mx1+t-4*K;// x+y
-    t=ask('D');
-    t=ask('D');
-    t=ask('D');
-    t=ask('D');
-    int p2=mx2+t; // dist from origin now
-    p2=mx2+t-4*K; // x-y
-    // 2X=p1+p2
-    int X=(p1+p2)/2;
-    int Y=p1-X;
-    cout<<"! "<<X<<" "<<Y<<endl;
+    vi vis(n,0);
+    dfs_tree(0,vis);
+    vi vvis(n,0);
+    int t=check(0,-1,vvis);
+    if(!res) cout<<0<<endl;
+    else{
+        forn(i,0,n){
+            for(auto it:tree1[i]) cout<<i+1<<" "<<it+1<<endl;
+        }
+        forn(i,0,n){
+            for(auto it:extra[i]) cout<<i+1<<" "<<it+1<<endl;
+        }
+    }
 }
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
-    cin >> t;
+    // cin >> t;
     while (t--) {
         solve();
     }

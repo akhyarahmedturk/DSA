@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-08-28 20:41 (GMT+5)
+*    Created: 2025-09-13 19:33 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -33,36 +33,49 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-int K=1e9;
-int ask(char ch){
-    cout<<"? "<<ch<<" "<<K<<endl;
-    int x; cin>>x; return x;
-}
-
 void solve() {
-    int n; cin>>n;
-    int mx1=-2e9,mx2=-2e9;
+    int n; 
+    cin>>n;
+    vector<vi> arr(n);
     forn(i,0,n){
-        int x,y; cin>>x>>y;
-        mx1=max(mx1,x+y); mx2=max(mx2,x-y);
+        int k; cin>>k;
+        arr[i].resize(k);
+        forn(j,0,k){ cin>>arr[i][j]; }
     }
-    int t=ask('U');
-    t=ask('U');
-    t=ask('R');
-    t=ask('R');
-    int p1=mx1+t;// total dist from origin now
-    p1=mx1+t-4*K;// x+y
-    t=ask('D');
-    t=ask('D');
-    t=ask('D');
-    t=ask('D');
-    int p2=mx2+t; // dist from origin now
-    p2=mx2+t-4*K; // x-y
-    // 2X=p1+p2
-    int X=(p1+p2)/2;
-    int Y=p1-X;
-    cout<<"! "<<X<<" "<<Y<<endl;
+    sort(all(arr),[&](vi &a,vi&b){
+        return a.size()<b.size();
+    });
+    int mx=arr.back().size();
+    vector<pii> res(mx,{inf,-1});
+    forn(i,0,n){
+        bool ch=false;
+        int nn=0;
+        int size=arr[i].size();
+        forn(j,0,size){
+            if(nn==j){
+                if(res[j].f>arr[i][j]) ch=true;
+                else if(res[j].f<arr[i][j]) { nn=res[j].ss; }
+                else{
+                    bool ya=false;
+                    int l=j,r=res[j].ss;
+                    while(l<=r){
+                        if(arr[i][l]==res[l].f){ l++; continue;}
+                        else if(arr[i][l]<res[l].f){ ya=true;}
+                        break;
+                    }
+                    if(ya) ch=true;
+                    else nn=res[j].ss;
+                }
+            }
+            if(ch) res[j]={arr[i][j],size};
+            // cout<<"i "<<i<<" f "<<res[j].f<<" ss "<<res[j].ss<<endl;
+        }
+    }
+    forn(i,0,mx) cout<<res[i].f<<" ";
+    cout<<endl;
 }
+// 2 4 6 6 8 3 5 7
+// 
 
 int32_t main(){
 ios_base::sync_with_stdio(false);

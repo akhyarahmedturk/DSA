@@ -33,16 +33,44 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+vector<vi> arr;
 
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
-    int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
-    cout<<res<<endl;
+bool check(int mid,int n){
+    forn(i,0,arr.size()){
+        int v=arr[i][0]*arr[i][1]+arr[i][2];
+        int cc=(mid)/v;
+        n-=cc*arr[i][1];
+        int diff=mid-cc*v;
+        int ya=diff/arr[i][0];
+        n-=min(ya,arr[i][1]);
+    }
+    return n<=0;
 }
-//13 3,10 6, 4 12,8,8 
+
+void solve(int tt) {
+    int k,x; cin>>k>>x;
+    vi res;
+    int a=x,b=(1LL<<(k+1));
+    int t=b;
+    b-=x;
+    while(a!=b){
+        if(a>b){
+            res.pb(2);
+            b*=2;
+            a=t-b;
+        }
+        else{
+            res.pb(1);
+            a*=2;
+            b=t-a;
+        }
+    }
+    reverse(all(res));
+    cout<<res.size()<<endl;
+    forn(i,0,res.size()) cout<<res[i]<<" ";
+    if(res.size()) cout<<endl;
+}
+//13 3,10 6, 4 12,8,8          7 11,14 2,12 4,8 8
 // 7 9,14 2, 12 4,8 8
 
 int32_t main(){

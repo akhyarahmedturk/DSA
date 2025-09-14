@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-07 22:09 (GMT+5)
+*    Created: 2025-09-07 19:31 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -33,25 +33,60 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+//
 
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
-    int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
-    cout<<res<<endl;
+void solve() {
+    int n,k;
+    cin>>n>>k;
+    map<int,int> mp;
+    forn(i,0,n){ int x; cin>>x; mp[x]++;}
+    if(mp.find(0)==mp.end()) {
+        if(k%2==0) cout<<n<<endl;
+        else cout<<0<<endl;
+    }
+    else if(mp[0]>1){
+        if(k==1){
+            int sum=0,mm=0;
+            int idx=0,c=n;
+            while(mp.find(idx)!=mp.end()){
+                if(mp[idx]==1) { sum+=idx; c--;} idx++;
+            }
+            sum+=c*idx;
+            cout<<sum<<endl;
+        }
+        else if(k%2==0) cout<<0<<endl;
+        else cout<<n<<endl;
+    }
+    else{
+        if(k==1){
+            int sum=0,mm=0;
+            int idx=0,c=n;
+            while(mp.find(idx)!=mp.end()){
+                if(mp[idx]==1) { sum+=idx; c--;} idx++;
+            }
+            sum+=c*idx;
+            cout<<sum<<endl;
+        }
+        else{
+            int sum=0,mm=0;
+            int idx=0,c=n;
+            while(mp.find(idx)!=mp.end()){
+                if(mp[idx]==1) { sum+=idx; c--;} idx++;
+            }
+            if(k%2) sum+=c*idx;
+            else sum+=c*(idx-1);
+            cout<<sum<<endl;
+        }
+    }
 }
-//13 3,10 6, 4 12,8,8 
-// 7 9,14 2, 12 4,8 8
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
     cin >> t;
-    forn(i,0,t) {
-        solve(i);
+    while (t--) {
+        solve();
     }
     return 0;
 }

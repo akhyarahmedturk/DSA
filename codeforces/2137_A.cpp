@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-07 22:09 (GMT+5)
+*    Created: 2025-09-07 19:30 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -34,24 +34,37 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
+
+void solve() {
     int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
-    cout<<res<<endl;
+    map<int,vi> mp;
+    vi arr(n);
+    vi res(n,-1);
+    forn(i,0,n){
+        cin>>arr[i];
+        mp[arr[i]].pb(i);
+    }
+    int c=1;
+    for(auto it:mp){
+        vi vv=it.ss;
+        int val=it.f;
+        if(vv.size()%val){ cout<<-1<<endl; return;}
+        forn(j,0,vv.size()){
+            res[vv[j]]=c;
+            if((j+1)%val==0) c++;
+        }
+    }
+    forn(i,0,n) cout<<res[i]<<" ";
+    cout<<endl;
 }
-//13 3,10 6, 4 12,8,8 
-// 7 9,14 2, 12 4,8 8
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
     cin >> t;
-    forn(i,0,t) {
-        solve(i);
+    while (t--) {
+        solve();
     }
     return 0;
 }

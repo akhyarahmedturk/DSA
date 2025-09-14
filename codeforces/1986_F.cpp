@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-07 22:09 (GMT+5)
+*    Created: 2025-09-10 17:27 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -33,25 +33,54 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+// bridges in graph
 
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
-    int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
+int res;
+int n,m; 
+
+vector<set<int>> graph;
+pii DFS(int idx,vi &vis,vi &count){
+    vis[idx]=1;
+    int upper=0;// upper bhejna hy count
+    int nechy=0;// nechy sy mila
+    int childs=0;
+    for(auto it:graph[idx]){
+        graph[it].erase(idx);
+        if(vis[it]) { upper++; count[it]++;}// it py subtract hoga
+        else {
+            pii x=DFS(it,vis,count);
+            if(x.f==0) {
+                int ya=((n-x.ss)*((n-x.ss-1)))/2+((x.ss)*(x.ss-1))/2;
+                if(res>ya) res=ya;
+            }
+            childs+=x.ss;
+            nechy+=x.f;//nechy sy mila
+        }
+    }
+    nechy-=count[idx];
+    return {nechy+upper,childs+1};
+}
+
+void solve() {
+    cin>>n>>m;
+    graph.assign(n,{});
+    forn(i,0,m){
+        int a,b; cin>>a>>b; a--; b--;
+        graph[a].insert(b); graph[b].insert(a);
+    }
+    res=(n*(n-1))/2;
+    vi vis(n),count(n);
+    pii t=DFS(0,vis,count);
     cout<<res<<endl;
 }
-//13 3,10 6, 4 12,8,8 
-// 7 9,14 2, 12 4,8 8
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
     cin >> t;
-    forn(i,0,t) {
-        solve(i);
+    while (t--) {
+        solve();
     }
     return 0;
 }

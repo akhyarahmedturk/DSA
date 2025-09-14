@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-07 22:09 (GMT+5)
+*    Created: 2025-09-08 21:44 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -33,25 +33,53 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
-    int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
-    cout<<res<<endl;
+int ss(int idx,int a,int b,vector<vi>& dp,vi &arr){
+    if(idx==arr.size()) return 0;
+    if(dp[idx][a]!=-1) return dp[idx][a];
+    dp[idx][a]=0;
+    if(a>=arr[idx]) dp[idx][a]=max(dp[idx][a],1+ss(idx+1,a-arr[idx],b,dp,arr));
+    if(b>=arr[idx]) dp[idx][a]=max(dp[idx][a],1+ss(idx+1,a,b-arr[idx],dp,arr));
+    return dp[idx][a];
 }
-//13 3,10 6, 4 12,8,8 
-// 7 9,14 2, 12 4,8 8
+// 
+
+void solve() {
+    int n,k; cin>>n>>k;
+    vector<vi> graph(n);
+    forn(i,1,n){
+        int a,b; cin>>a; a--;
+        graph[a].pb(i);
+    }
+    vi ya;
+    queue<int> q;
+    q.push(0);
+    while(1){
+        int size=q.size();
+        ya.pb(size);
+        bool chh=false;
+        while(size--){
+            bool ch=false;
+            int u=q.front();
+            q.pop();
+            for(auto it:graph[u]){
+                ch=true; q.push(it);
+            }
+            if(!ch) chh=true;
+        }
+        if(chh) break;
+    }
+    // cout<<" dvs "<<ya.size()<<endl;
+    vector<vi> dp(n+1,vi(n+1,-1));
+    cout<<ss(0,k,n-k,dp,ya)<<endl;
+}
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
     cin >> t;
-    forn(i,0,t) {
-        solve(i);
+    while (t--) {
+        solve();
     }
     return 0;
 }
