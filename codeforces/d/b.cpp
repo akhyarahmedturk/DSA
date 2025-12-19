@@ -1,8 +1,11 @@
-/*
+/*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-08-03 21:57 (GMT+5)
+*    Created: 2025-12-15 21:45 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
+
+*    Those who can't remember the past are condemned to repeat it.
+*                                                 -Dynamic Programming.
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -18,81 +21,57 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
-#define pii pair<ld, ld>
+#define pii pair<int, int>
 #define pb push_back
 #define f first
 #define ss second
 #define vi vector<int>
+#define vb vector<bool>
+#define vvi vector<vi>
 #define all(a) a.begin(), a.end()
 #define allr(a) a.rbegin(), a.rend()
 #define mod 1000000007
 #define mod2 998244353
 const int inf = 1e17 + 1;
+#define INT_MAX LLONG_MAX
+#define nl "\n"
 
 #define forn(i, a, b) for (int i = a; i < b; i++)
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-vector<vi> graph;
-vi arr;
-
-int dfs(int idx,int par){
-    int res=-1;
-    if(arr[idx]==1) return 0;
-    for(auto it:graph[idx]){
-        if(it!=par) {
-            int a=dfs(it,idx);
-            if(a!=-1){
-                if(res=-1) res=a;
-                else res=min(res,a);
-            }
+void solve(){
+    int n,m; cin>>n>>m;
+    vi a(n),b(m); input(a,n);input(b,m);
+    sort(all(b));
+    int prev=-1LL*inf;
+    for(int i=0;i<n;++i){
+        int start=a[i]+prev;
+        auto it=lower_bound(all(b),start);
+        if(it!=b.end() && (*it)<=2*a[i]-1){
+            int c=*it-a[i];
+            if(c>=prev){
+                prev=min(c,a[i]);
+            } 
+        }
+        else if(a[i] >= prev){
+            prev=a[i];
+        }
+        else{
+            cout<<"NO"<<endl;
+            return;
         }
     }
-    if(res==-1) return res;
-    else return res+1;
-}
-
-void solve() {
-    vector<pii> arr={{2,10},{2,5},{8,4},{5,8},{7,5},{16,-4}};
-    vector<vector<pii>> yaa={{{2,10}},{{2,5}},{{5,8}}};
-    forn(j,0,5){
-        vector<pii> ya;
-        for(auto it:yaa){
-            ld x=0,y=0;
-            for(auto itt:it) { x+=itt.f; y+=itt.ss;}
-            x/=it.size(); y/=it.size();
-            ya.pb({x,y});
-        }
-        yaa.assign(3,{});
-        cout<<"Itteration #: "<<j<<endl;
-        cout<<"printing ks(centers): ";
-        for(auto it:ya) cout<<"{"<<it.f<<","<<it.ss<<"}";
-        cout<<endl;
-        ld sse=0;
-        forn(i,0,arr.size()){
-            cout<<"For i: "<<i<<" --- ";
-            ld mm=100000;
-            int idx=0,c=0;
-            for(auto it:ya) {
-                ld sq=(it.f-arr[i].f)*(it.f-arr[i].f)+(it.ss-arr[i].ss)*(it.ss-arr[i].ss);
-                ld diff=sqrt(sq);
-                cout<<diff<<" ";
-                if(mm>sq){ mm=sq; idx=c;}
-                c++;
-            }
-            yaa[idx].pb(arr[i]);
-            sse+=mm;
-            cout<<endl;
-        }
-        cout<<"sse "<<sse<<endl;
-    }
+    cout<<"YES"<<endl;
 }
 
 int32_t main(){
-//ios_base::sync_with_stdio(false);
-//cin.tie(NULL);
+ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+// freopen("input.txt", "r", stdin);
+// freopen("output.txt", "w", stdout);
     int t=1;
-    // cin >> t;
+    cin >> t;
     while (t--) {
         solve();
     }

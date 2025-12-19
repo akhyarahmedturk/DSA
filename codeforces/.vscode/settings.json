@@ -15,6 +15,15 @@
         "random": "cpp",
         "*.tcc": "cpp",
         "istream": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "forward_list": "cpp",
+        "unordered_set": "cpp",
+        "format": "cpp",
+        "generator": "cpp",
+        "initializer_list": "cpp",
+        "ranges": "cpp",
+        "text_encoding": "cpp",
+        "regex": "cpp",
+        "valarray": "cpp"
     }
 }

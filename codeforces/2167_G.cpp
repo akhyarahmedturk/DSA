@@ -1,6 +1,6 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-07 22:09 (GMT+5)
+*    Created: 2025-10-28 21:05 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 */
@@ -28,30 +28,46 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 #define mod 1000000007
 #define mod2 998244353
 const int inf = 1e17 + 1;
+#define INT_MAX LLONG_MAX
 
 #define forn(i, a, b) for (int i = a; i < b; i++)
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 
-//1 3 4 9  can be 1 4 , 1 9 , 1 4 , 3 4, 3 9 ,
-// 1 3 4 9 6 5 can not be 1 6 5
-void solve(int tt) {
+void solve() {
     int n; cin>>n;
-    vi arr(n); input(arr,n);
-    int res=0; forn(i,0,n) res+=arr[i]-1;
-    cout<<res<<endl;
+    vi a(n),c(n); input(a,n); input(c,n);
+    // set<int> st;
+    // for(auto it:a) st.insert(it);
+    // map<int,int> mp;
+    // int curr=1;
+    // for(auto it:st){ mp[it]=curr; curr++;}
+    // forn(i,0,n) a[i]=mp[a[i]];
+
+    //highest non decreasing sub sequence in terms of C[i]
+    //to usko change nahi karna hoga bas
+    vi dp(n,-1);
+    forn(i,0,n){
+        dp[i]=c[i];
+        forn(j,0,i){
+            if(a[j]<=a[i]) dp[i]=max(dp[i],c[i]+dp[j]);
+        }
+    }
+    int sum=0;
+    for(auto it:c) sum+=it;
+    int mx=0;
+    for(auto it:dp) mx=max(mx,it);
+    cout<<sum-mx<<endl;
 }
-//13 3,10 6, 4 12,8,8 
-// 7 9,14 2, 12 4,8 8
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
     int t=1;
     cin >> t;
-    forn(i,0,t) {
-        solve(i);
+    while (t--) {
+        solve();
     }
     return 0;
 }

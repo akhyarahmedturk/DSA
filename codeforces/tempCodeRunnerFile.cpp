@@ -1,8 +1,11 @@
 /*
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-08-24 19:56 (GMT+5)
+*    Created: 2025-11-12 20:00 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
+
+*    Those who can’t remember the past are condemned to repeat it.
+*                                                 -Dynamic Programming.
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -28,56 +31,86 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 #define mod 1000000007
 #define mod2 998244353
 const int inf = 1e17 + 1;
+#define INT_MAX LLONG_MAX
 
 #define forn(i, a, b) for (int i = a; i < b; i++)
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-int aska(int c,int n){
-    cout<<"? "<<c<<" "<<n<<" ";
-    forn(i,0,n) cout<<i+1<<" ";
-    cout<<endl;
-    int x; cin>>x;
-    return x;
-}
-
-int askb(set<int> &rr,int c){
-    cout<<"? "<<c<<" "<<rr.size()<<" "<<c<<" ";
-    for(auto it:rr) cout<<it+1<<" ";
-    int x; cin>>x;
-    return x;
-}
-
 void solve() {
     int n; cin>>n;
-    set<int> rr;
-    forn(i,0,n) rr.insert(i+1);
-    map<int,vi> mp;
-    forn(i,1,n+1){
-        int aa=aska(i,n);
-        mp[aa].pb(i);
-    }
-    vector<vi> yaa;
-    for(auto it:mp) yaa.pb(it.ss);
-    vi res;
-    int prv=yaa.back()[0];
-    res.pb(prv);
-    forr(i,yaa.size()-2,0){
-        for(auto it:yaa[i]){
-            cout<<"? "<<prv<<" 2 "<<prv<<" "<<it<<endl;
-            int a; cin>>a;
-            if(a==2){
-                prv=it;
-                res.pb(prv);
-                break;
+    vi ya(n+1,1);
+    int rem=n;
+    set<int> res;
+    forn(i,1,n+1) {res.insert(i);}
+    for(int i=1;res.size()>1;i*=2LL){
+        int c=0;
+        vi ans(n+1,0);
+        forn(j,1,n){
+            if(ya[j]){
+                cout<<"? "<<j<<" "<<i<<endl;
+                int x; cin>>x;
+                ans[j]=x;
+                if(!x) c++;
             }
         }
+        set<int> st2;
+        if(rem&1){
+            if(c==rem/2+1){
+                rem=rem/2;
+                ya=ans;
+                for(auto it:res){
+                    if(it&i) st2.insert(it);
+                } 
+            }
+            else{
+                rem=rem/2+1;
+                forn(i,1,n){
+                    if(ya[i]) ya[i]=(!ans[i]);
+                }
+                for(auto it:res){
+                    if(!(it&i)) st2.insert(it);
+                }  
+            }
+        }
+        else{
+            if(c==rem/2){
+                rem=rem/2;
+                ya=ans; 
+                for(auto it:res){
+                    if((it&i)) st2.insert(it);
+                } 
+            }
+            else{
+                rem=rem/2;
+                forn(i,1,n){
+                    if(ya[i]) ya[i]=(!ans[i]);
+                } 
+                for(auto it:res){
+                    if(!(it&i)) st2.insert(it);
+                } 
+            }
+        }
+        for(auto it:res)cout<<it<<" ";
+        cout<<endl;
+        cout<<rem<<endl;
+        swap(res,st2);
     }
-    cout<<"! ";
-    forn(i,0,res.size()) cout<<res[i]<<" ";
-    cout<<endl;
+    cout<<"! "<<*res.begin()<<endl;
 }
+// 1 2 3 4 5 6 7 8 9 10 11 12
+// n-1=7 querries-> know parity of every including nth remaining(n+1, 13)
+// it can be 2,4,6,8,10,12
+// &2=2 waly kitny? 3
+//so, divide ho rahy by 2??
 
+// 1 2 3 4 5 6 7 8 9
+// 1 3 5 7 9
+// 1 5 9
+
+//1 3 4 5 6 7 2
+//6 4 ,2
+//
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);

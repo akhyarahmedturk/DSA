@@ -33,7 +33,7 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve() {
+void solve() {//not solved
     int n; 
     cin>>n;
     vector<vi> arr(n);

@@ -1,0 +1,88 @@
+/*   Bismillah
+*    Author: Akhyar Ahmed Turk
+*    Created: 2025-11-26 19:00 (GMT+5)
+
+*    brain["Motivation"].insert("Ya to win hy ya learn");
+
+*    Those who can't remember the past are condemned to repeat it.
+*                                                 -Dynamic Programming.
+*/
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+// use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
+// idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
+// idx.find_by_order(n); to get the nth value by order
+#define int long long
+#define ld long double
+#define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
+#define pii pair<int, int>
+#define pb push_back
+#define f first
+#define ss second
+#define vi vector<int>
+#define vb vector<bool>
+#define vvi vector<vi>
+#define all(a) a.begin(), a.end()
+#define allr(a) a.rbegin(), a.rend()
+#define mod 1000000007
+#define mod2 998244353
+const int inf = 1e17 + 1;
+#define INT_MAX LLONG_MAX
+#define nl "\n"
+
+#define forn(i, a, b) for (int i = a; i < b; i++)
+#define forr(i, a, b) for (int i = a; i >= b; i--)
+#define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
+
+void solve() {
+    int n,l,r; cin>>n>>l>>r;
+    vi arr(n); input(arr,n);
+    sort(all(arr));
+    int curr=0;
+    //worst case ya to l ya r
+    //f(x)=(x-a1)+(x-a2)+(x-a3) ... (b1-x)+ (b2-x)....
+    forn(i,0,n) curr+=arr[i];
+    int res=0;
+    //sab ko use karo
+    forn(i,0,n+1){
+        int diff=(2*i-n);
+        int ya=curr+diff*l;
+        int ya2=curr+diff*r;
+        res=max(res,min(ya,ya2));
+        if(i==n) break;
+        curr-=2*arr[i];
+    }
+    //bech waly 1 ko chordo
+    curr=0;
+    forn(i,1,n) curr+=arr[i];
+    int res2=0;
+    forn(i,0,n){
+        int diff=(2*i-(n-1));
+        int ya=curr+diff*l;
+        int ya2=curr+diff*r;
+        res2=max(res2,min(ya,ya2));
+        if(i==n-1) break;
+        curr-=arr[i+1];
+        curr-=arr[i];
+    }
+    cout<<max(res,res2)<<endl;
+}
+
+int32_t main(){
+ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+// freopen("input.txt", "r", stdin);
+// freopen("output.txt", "w", stdout);
+    int t=1;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
