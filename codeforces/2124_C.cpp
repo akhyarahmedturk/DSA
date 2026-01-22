@@ -1,8 +1,11 @@
-/*
+/*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-07-06 22:41 (GMT+5)
+*    Created: 2025-12-22 20:47 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
+
+*    Those who can't remember the past are condemned to repeat it.
+*                                                 -Dynamic Programming.
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -19,51 +22,44 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
 #define pii pair<int, int>
-// #define mp make_pair
 #define pb push_back
 #define f first
 #define ss second
 #define vi vector<int>
+#define vb vector<bool>
+#define vvi vector<vi>
 #define all(a) a.begin(), a.end()
 #define allr(a) a.rbegin(), a.rend()
 #define mod 1000000007
 #define mod2 998244353
 const int inf = 1e17 + 1;
+#define INT_MAX LLONG_MAX
+#define nl "\n"
 
 #define forn(i, a, b) for (int i = a; i < b; i++)
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-
-bool ss(int idx,int curr,vi &arr,vector<vi> &dp){
-    rem-=arr[idx];
-    curr+=arr[idx];
-    if(curr-(rem+pass)>req || curr+rem-pass<req) return false;
-    if(curr-(rem+pass)==req || curr+rem-pass==req) return true;
-
-    for(int i=idx+1;i<arr.size();i++){
-        if(ss(i,pass,curr,rem,req,arr)) return true;
-        pass+=arr[i];
-    }
-    return false;
-}
-
 void solve() {
-    int n,req;
-    cin>>n>>req;
-    vi arr(n);
-    int rem=0,pass=0;
-    forn(i,0,n) { cin>>arr[i]; rem+=arr[i];}
-    if(ss(0,pass,0,rem,req,arr)){
-        cout<<"YES"<<endl; return;
+    int n; cin>>n;
+    vi arr(n); input(arr,n);
+    int mx=arr[0],res=1;
+    forn(i,0,n){
+        if(arr[i]>mx) mx=arr[i];
+        else{
+            res=max(res,mx/arr[i]);
+        }
     }
+    cout<<res<<endl;
 }
 
 int32_t main(){
-//ios_base::sync_with_stdio(false);
-//cin.tie(NULL);
+ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+// freopen("input.txt", "r", stdin);
+// freopen("output.txt", "w", stdout);
     int t=1;
-    // cin >> t;
+    cin >> t;
     while (t--) {
         solve();
     }

@@ -32,49 +32,136 @@ int NPR(int n, int r){
     return (((fact[n] * inv_fact[n - r]) % mod)) % mod;
 }
 
-// Segment tree
+//Segment Tree
 
-class SegmentTree{
-private:
-    int n;
-    vi tree, arr;
-    void build(int node, int l, int r){
-        if (l == r) tree[node] = arr[l];
-        else{
-            int mid = (l + r) / 2;
-            build(2 * node, l, mid);
-            build(2 * node + 1, mid + 1, r);
-            tree[node] = tree[2 * node] + tree[2 * node + 1]; //
+struct Node {
+    int val ;
+    Node( int val = 0 ) : val(val) {}
+    void merge( Node& left , Node& right ) {
+        val = left.val + right.val ;
+    }
+} ;
+
+struct Update {
+    int val ;
+    Update( int val = 0 ) : val(val) {}
+    void apply( Node& node , int l , int r ) {
+        node.val += val * ( r - l + 1ll ) ; // Currently lazyUpdate is via updating val NOT replacing.
+    }
+    void propagate( Update& newU ) {
+        val += newU.val ;
+    }
+    void modify( Node& node ) {
+        node.val = val ;
+    }
+} ;
+
+class SegmentTree {
+    private:
+        int n ;
+        vector<Node> segTree ;
+        vector<Update> lazyTree ;
+
+        void buildTree( int node , int start , int end , vi& arr ) {
+            if( start == end ) {
+                segTree[node] = Node( arr[start] ) ;
+                return ;
+            }
+
+            int mid = start + (end - start) / 2 ;
+            buildTree( 2 * node + 1 , start , mid , arr ) ;
+            buildTree( 2 * node + 2 , mid + 1 , end , arr ) ;
+            segTree[ node ].merge( segTree[2 * node + 1] , segTree[2 * node + 2] ) ;
         }
-    }
-    int query(int node, int l, int r, int ql, int qr){
-        if (qr < l || r < ql) return 0;
-        if (ql <= l && r <= qr) return tree[node];
-        int mid = (l + r) / 2;
-        return query(2 * node, l, mid, ql, qr) + query(2 * node + 1, mid + 1, r, ql, qr);//
-    }
-    void update(int node, int l, int r, int idx, int val){
-        if (l == r){
-            arr[idx] = val;
-            tree[node] = val;
+
+        void updateTree( int i , int l , int r , int& idx , Update& u1 ) {
+            pushdown( i , l , r ) ;
+            if( l == r ) {
+                u1.modify( segTree[i] ) ;
+                return ;
+            }
+
+            int mid = l + (r - l) / 2 ;
+            if( idx <= mid )
+                updateTree( 2*i + 1 , l , mid , idx , u1 ) ;
+            else
+                updateTree( 2*i + 2 , mid + 1 , r , idx , u1 ) ;
+            
+            segTree[i].merge( segTree[2 * i + 1] , segTree[2 * i + 2] ) ;
         }
-        else{
-            int mid = (l + r) / 2;
-            if (idx <= mid) update(2 * node, l, mid, idx, val);
-            else update(2 * node + 1, mid + 1, r, idx, val);
-            tree[node] = tree[2 * node] + tree[2 * node + 1];//
+
+        void pushdown( int i , int l , int r ) {
+            if( lazyTree[i].val ) {
+                lazyTree[i].apply( segTree[i] , l , r ) ;
+                if( l != r ) {
+                    lazyTree[2 * i + 1].propagate( lazyTree[i] ) ;
+                    lazyTree[2 * i + 2].propagate( lazyTree[i] );
+                }
+                lazyTree[i] = Update() ;
+            }
         }
-    }
-public:
-    SegmentTree(vi arr_1){
-        arr = arr_1;
-        n = arr.size();
-        tree.assign(4 * n, 0);
-        build(1, 0, n - 1);
-    }
-    int rangeSum(int l, int r) { return query(1, 0, n - 1, l, r); }
-    void Update(int idx, int val) { update(1, 0, n - 1, idx, val); }
-};
+
+        void lazyUpdateRange( int i , int l , int r , int start , int end , Update& u1 ) {
+            if( r < start || l > end )
+            return ;
+            
+            pushdown( i , l , r ) ;
+            if( start <= l && r <= end ) {
+                u1.apply( segTree[i] , l , r ) ;
+                if( l != r ) {
+                    lazyTree[2 * i + 1].propagate( u1 ) ;
+                    lazyTree[2 * i + 2].propagate( u1 ) ;
+                }
+                return ;
+            }
+
+            int mid = l + (r - l) / 2 ;
+            lazyUpdateRange( 2*i + 1 , l , mid , start , end , u1 ) ;
+            lazyUpdateRange( 2*i + 2 , mid + 1 , r , start , end , u1 ) ;
+            segTree[i].merge( segTree[2 * i + 1] , segTree[2 * i + 2] ) ;
+        }
+
+        Node query( int i , int l , int r , int start , int end ) {
+            if( r < start || l > end )
+                // return Node( numeric_limits<int>::lowest() );
+                return Node() ;
+            
+            pushdown( i , l , r ) ;
+            if( start <= l && r <= end )
+                return segTree[i] ;
+            
+            int mid = l + (r - l) / 2 ;
+            Node left = query( 2*i + 1 , l , mid , start , end ) ;
+            Node right = query( 2*i + 2 , mid + 1 , r , start , end ) ;
+            Node res ;
+            res.merge( left , right ) ;
+            return res ;
+        }
+
+    public:
+        SegmentTree( vi& nums ) : n( nums.size() ) , segTree(4 * n , 0) , lazyTree( 4 * n , 0 ) {
+            // segTree.resize( 2 * n - 1 ) ;
+            fill( all( segTree ) , Node() ) ;
+            fill( all( lazyTree ) , Update() ) ;
+            buildTree( 0 , 0 , n - 1 , nums ) ;
+        }
+
+        void update( int index , int val ) {
+            if( index < 0 || index >= n )  return ;
+            Update u1( val ) ;
+            updateTree( 0 , 0 , n - 1  , index , u1 ) ;
+        }
+
+        void lazyUpdateRange( int start , int end , int val ) {
+            Update u1( val ) ;
+            lazyUpdateRange( 0 , 0 , n - 1 , start , end , u1 ) ;
+        }
+
+        int query( int start , int end ) {
+            // if( start > end )   swap( start, end ) ;
+            return query( 0 , 0 , n - 1 , start , end ).val ;
+        }
+} ;
 
 // dijkstra 
 
@@ -374,3 +461,53 @@ struct Trie {
         return cur->end;
     }
 };
+
+
+//Mo's Algo
+
+struct Query {
+    int l, r, idx; //0 based
+};
+
+vector<int> mo_solve(const vector<int> &arr, vector<Query> queries) {
+    int n = arr.size();
+    int q = queries.size();
+    int block = max(1LL, (int) sqrt(n));
+
+    sort(queries.begin(), queries.end(), [&](const Query &a, const Query &b) {
+        int block_a = a.l / block;
+        int block_b = b.l / block;
+        if (block_a != block_b) return block_a < block_b;
+        // odd-even optimization (aka Hilbert-like tweak)
+        return  (a.r < b.r);
+    });
+
+    vector<int> ans(q);
+
+    vector<int> freq(1e6+10, 0);  // example freq array for values up to 1e6
+    int cur_answer = 0;              // example: count distinct numbers
+    // multiset<int> st;
+
+    auto add = [&](int idx) {
+        int x = arr[idx];
+        if (freq[x]==0) cur_answer++;
+        freq[x]++;
+    };
+
+    auto remove = [&](int idx) {
+        int x = arr[idx];
+        freq[x]--;
+        if(freq[x]==0) cur_answer--;
+    };
+    int L = 0, R = -1;
+    for (auto &qr : queries) {
+        while (L > qr.l) add(--L);
+        while (R < qr.r) add(++R);
+        while (L < qr.l) remove(L++);
+        while (R > qr.r) remove(R--);
+
+        ans[qr.idx] = cur_answer;
+    }
+
+    return ans;
+}

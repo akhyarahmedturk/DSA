@@ -37,89 +37,37 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+void add(int x,vi &mp,int cost){
+    if(x%2==0) mp[2]+=cost;
+    while(x%2==0){ x/=2;}
+    for(int j=3;j*j<=x;j+=2){
+        if(x%j==0){
+            mp[j]+=cost;
+            while(x%j==0) x/=j;
+        }
+    }
+    if(x>1) mp[x]+=cost;
+}
+
 void solve(){
     int n; cin>>n;
-    vi arr(n); input(arr,n);
-    vi b(n); input(b,n);
-    set<int> st;
+    vi a(n),b(n); input(a,n); input(b,n);
+    vi mp(2e5+10,0),mp2(2e5+10,0);
+    vi mp(2e5)
+    int res=inf;
+    forn(i,0,n) add(a[i],mp,1);
+    for(auto it:mp){ 
+        if(it>=2){ cout<<0<<endl; return;}
+    }
     forn(i,0,n){
-        int ya=arr[i];
-        if(ya%2==0){
-            if(st.find(2)!=st.end()){ cout<<0<<endl; return;}
-            st.insert(2);
-        } 
-        while(ya%2==0) ya/=2;
-        for(int i=3;i*i<=ya;i+=2){
-            if(ya%i==0){
-                if(st.find(i)!=st.end()){ cout<<0<<endl; return;}
-                st.insert(i);
-            }
-            while(ya%i==0) ya/=i;
-        }
-        if(ya>1){
-            if(st.find(ya)!=st.end()){ cout<<0<<endl; return;}
-            st.insert(ya);
-        }
+        add(a[i],mp,-1);//isko nikalo
+
     }
-    forn(j,0,n){
-        int ya=arr[j];
-        if(ya%2==0) st.erase(2);
-        while(ya%2==0) ya/=2;
-        for(int i=3;i*i<=ya;i+=2){
-            if(ya%i==0){
-                st.erase(i);
-            }
-            while(ya%i==0) ya/=i;
-        }
-        if(ya>1){
-            st.erase(ya);
-        }
-
-        ya=arr[j]+1;
-        if(ya%2==0){
-            if(st.find(2)!=st.end()){ cout<<1<<endl; return;}
-            st.insert(2);
-        } 
-        while(ya%2==0) ya/=2;
-        for(int i=3;i*i<=ya;i+=2){
-            if(ya%i==0){
-                st.insert(i);
-            }
-            while(ya%i==0) ya/=i;
-        }
-        if(ya>1){
-            if(st.find(ya)!=st.end()){ cout<<1<<endl; return;}
-            st.insert(ya);
-        }
-
-        ya=arr[j]+1;
-        if(ya%2==0) st.erase(2);
-        while(ya%2==0) ya/=2;
-        for(int i=3;i*i<=ya;i+=2){
-            if(ya%i==0){
-                st.erase(i);
-            }
-            while(ya%i==0) ya/=i;
-        }
-        if(ya>1){
-            if(st.find(ya)!=st.end()) st.erase(ya);
-        }
-
-        ya=arr[j];
-        if(ya%2==0) st.insert(2);
-        while(ya%2==0) ya/=2;
-        for(int i=3;i*i<=ya;i+=2){
-            if(ya%i==0){
-                st.insert(i);
-            }
-            while(ya%i==0) ya/=i;
-        }
-        if(ya>1){
-            st.insert(ya);
-        }
-    }
-    cout<<2<<endl;
+    cout<<res<<endl;
 }
+
+//cost[x]=min( (x-a[1])*b[1] ,(x-a[2]*b[2]) .....)
+//cost[x+1]=min( (x+1-a[1])*b[1] ,(x+1-a[2]*b[2]) .....)
 
 int32_t main(){
 ios_base::sync_with_stdio(false);

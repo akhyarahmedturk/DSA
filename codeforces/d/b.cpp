@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-12-15 21:45 (GMT+5)
+*    Created: 2026-01-20 20:59 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,30 +40,36 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve(){
-    int n,m; cin>>n>>m;
-    vi a(n),b(m); input(a,n);input(b,m);
-    sort(all(b));
-    int prev=-1LL*inf;
-    for(int i=0;i<n;++i){
-        int start=a[i]+prev;
-        auto it=lower_bound(all(b),start);
-        if(it!=b.end() && (*it)<=2*a[i]-1){
-            int c=*it-a[i];
-            if(c>=prev){
-                prev=min(c,a[i]);
-            } 
-        }
-        else if(a[i] >= prev){
-            prev=a[i];
-        }
-        else{
-            cout<<"NO"<<endl;
-            return;
-        }
+
+void solve() {
+    // int n=s.length();
+    // vi dp(n+1,0); dp[n]=1;
+    // forr(i,n-1,0){
+    //     if(s[i]=='0') dp[i]=0;
+    //     else if(s[i]=='1' && i!=n-1){
+    //         dp[i]=dp[i+1]+dp[i+2];
+    //     }
+    //     else if(s[i]=='2' && i!=n-1 && s[i+1]<='6'){
+    //         dp[i]=dp[i+1]+dp[i+2];
+    //     }
+    //     else{
+    //         dp[i]=dp[i+1];
+    //     }
+    // }
+    // cout<<dp[0]<<endl;
+    int n; cin>>n;
+    string s; cin>>s;
+    bool check=false;
+    cout<<"1 ";
+    forn(i,1,n-1){
+        if(s[i]!=s[0]) check=true;
+        if(check) cout<<i+1<<" ";
+        else cout<<"1 ";
     }
-    cout<<"YES"<<endl;
+    cout<<endl;
 }
+
+// 001
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
@@ -71,8 +77,13 @@ cin.tie(NULL);
 // freopen("input.txt", "r", stdin);
 // freopen("output.txt", "w", stdout);
     int t=1;
-    cin >> t;
-    while (t--) {
+    // string s; cin>>s;
+    // while(s!="0"){
+    //     solve(s);
+    //     cin>>s;
+    // }
+    cin>>t;
+    while(t--){
         solve();
     }
     return 0;

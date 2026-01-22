@@ -33,29 +33,13 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve() {// not complete
+void solve() {
     int n,k; cin>>n>>k;
     vi arr(n); input(arr,n);
-    if(k&1){
-        forn(i,0,n){
-            if(arr[i]&1) cout<<arr[i]+k<<" ";
-            else cout<<arr[i]<<" ";
-        }
-        cout<<endl;
-    }
-    else{
-        int start=3;
-        //arr[i]+x*k then arr[i]%start==0  x=???? or 
-        //(arr[i]+x*k)=start*y      
-
-        // while(k%start==0) start+=2;
-        start=k-1;
-        forn(i,0,n){
-            while(arr[i]%start) arr[i]+=k;
-            cout<<arr[i]<<" ";
-        }
-        cout<<endl;
-    }
+    // k+1 sy divisible bnao sabko
+    k++;
+    for(auto it:arr) cout<<it+(it%k)*(k-1)<<" ";
+    cout<<endl;
 }
 
 int32_t main(){
@@ -68,3 +52,10 @@ cin.tie(NULL);
     }
     return 0;
 }
+// k=6 ya=7
+// 1->7
+// 2->14
+// 3->21
+// 4->28
+// 5->35
+// 6->42
