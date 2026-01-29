@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-18 11:09 (GMT+5)
+*    Created: 2026-01-23 19:00 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,66 +40,45 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-struct BIT{
-    int n;
-    vi bit;
-    BIT(int nn){
-        n = nn;
-        bit.assign(n + 2, 0);
-    }
-    // Point update: add 'val' to index 'i'
-    void update(int i, int val){ //bit[i]+=x;
-        while (i <= n){
-            bit[i] += val;
-            i += i & -i;
-        }
-    }
-    // Prefix sum: sum[1...i]
-    int query(int i){
-        int res = 0;
-        while (i > 0){
-            res += bit[i];
-            i -= i & -i;
-        }
-        return res;
-    }
-};
+void dfs1(int idx,vector<vi> &graph,vi &vis,vi &st){
+    if(vis[idx]) return;
+    vis[idx]=1;
+    for(auto it:graph[idx]) dfs1(it,graph,vis,st);
+    st.pb(idx);
+}
+
+void dfs2(int idx,vector<vi> &graph,vi &vis,int &mm,int &count,vi &arr){
+    if(vis[idx]) return;
+    vis[idx]=1;
+    if(arr[idx]<mm){ mm=arr[idx]; count=1;}
+    else if(arr[idx]==mm) count++;
+    for(auto it:graph[idx]) dfs2(it,graph,vis,mm,count,arr);
+}
 
 void solve() {
-    int n,q; cin>>n>>q;
+    int n; cin>>n; 
     vi arr(n); input(arr,n);
-    vi arr2=arr; 
-    vector<vi> start(n+1),end(n+1);
-    vector<pii> queries(q);
-    forn(i,0,q){
-        int l,r,a,b; cin>>l>>r>>a>>b;
-        arr2.pb(a); arr2.pb(b);
-        queries[i]={a,b};
-        if(l-2>=0) start[l-2].pb(i);
-        end[r-1].pb(i);
+    vector<vi> g1(n),g2(n);
+    int m; cin>>m;
+    while(m--){
+        int a,b; cin>>a>>b; a--; b--;
+        g1[a].pb(b);
+        g2[b].pb(a);
     }
-    sort(all(arr2));
-    arr2.erase(unique(all(arr2)),arr2.end());
-    
-    forn(i,0,n) arr[i]=upper_bound(all(arr2),arr[i])-arr2.begin() ;
-    forn(i,0,q){
-        queries[i].f=upper_bound(all(arr2),queries[i].f)-arr2.begin() ;
-        queries[i].ss=upper_bound(all(arr2),queries[i].ss)-arr2.begin() ;
-    }
-    vi res(q,0);
-    BIT bit(arr2.size()+10);
-    forn(i,0,n){
-        bit.update(arr[i],1);
-        for(auto it:start[i]){
-            int v=bit.query(queries[it].ss)-bit.query(queries[it].f-1);
-            res[it]-=v;
-        }
-        for(auto it:end[i]){
-            int v=bit.query(queries[it].ss)-bit.query(queries[it].f-1);
-            res[it]+=v;
+    vi vis(n,0),st;
+    forn(i,0,n) dfs1(i,g1,vis,st); 
+    reverse(all(st));
+    vi vis2(n,0);
+    int sum=0,res=1;
+    for(auto it:st){
+        if(!vis2[it]){
+            int mm=inf,count=1;
+            dfs2(it,g2,vis2,mm,count,arr);
+            sum+=mm; res=(res*count)%mod; 
+            // cout<<it+1<<" "<<mm<<" "<<count<<endl;
         }
     }
-    for(auto it:res) cout<<it<<endl;
+    cout<<sum<<" "<<res<<endl;
 }
 
 int32_t main(){

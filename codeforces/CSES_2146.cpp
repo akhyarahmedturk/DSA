@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-18 11:09 (GMT+5)
+*    Created: 2026-01-24 15:01 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,66 +40,65 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-struct BIT{
-    int n;
-    vi bit;
-    BIT(int nn){
-        n = nn;
-        bit.assign(n + 2, 0);
-    }
-    // Point update: add 'val' to index 'i'
-    void update(int i, int val){ //bit[i]+=x;
-        while (i <= n){
-            bit[i] += val;
-            i += i & -i;
-        }
-    }
-    // Prefix sum: sum[1...i]
-    int query(int i){
-        int res = 0;
-        while (i > 0){
-            res += bit[i];
-            i -= i & -i;
-        }
-        return res;
-    }
+//Mo's Algo
+
+struct Query {
+    int l, r, idx; //0 based
 };
 
+vector<int> mo_solve(const vector<int> &arr, vector<Query> queries) {
+    int n = arr.size();
+    int q = queries.size();
+    int block = max(1LL, (int) sqrt(n));
+
+    sort(queries.begin(), queries.end(), [&](const Query &a, const Query &b) {
+        int block_a = a.l / block;
+        int block_b = b.l / block;
+        if (block_a != block_b) return block_a < block_b;
+        // odd-even optimization (aka Hilbert-like tweak)
+        return  (a.r < b.r);
+    });
+
+    vector<int> ans(q);
+
+    // vector<int> freq(1e6+10, 0);  // example freq array for values up to 1e6
+    int cur_answer = 0;              // example: count distinct numbers
+    multiset<int> st;
+
+    auto add = [&](int idx) {
+        int x = arr[idx];
+        if (freq[x]==0) cur_answer++;
+        freq[x]++;
+    };
+
+    auto remove = [&](int idx) {
+        int x = arr[idx];
+        freq[x]--;
+        if(freq[x]==0) cur_answer--;
+    };
+    int L = 0, R = -1;
+    for (auto &qr : queries) {
+        while (L > qr.l) add(--L);
+        while (R < qr.r) add(++R);
+        while (L < qr.l) remove(L++);
+        while (R > qr.r) remove(R--);
+
+        ans[qr.idx] = cur_answer;
+    }
+
+    return ans;
+}
+
+
 void solve() {
-    int n,q; cin>>n>>q;
+    int n,m; cin>>n>>m;
     vi arr(n); input(arr,n);
-    vi arr2=arr; 
-    vector<vi> start(n+1),end(n+1);
-    vector<pii> queries(q);
-    forn(i,0,q){
-        int l,r,a,b; cin>>l>>r>>a>>b;
-        arr2.pb(a); arr2.pb(b);
-        queries[i]={a,b};
-        if(l-2>=0) start[l-2].pb(i);
-        end[r-1].pb(i);
+    vector<Query> q(m);
+    forn(i,0,m){
+        int a,b; cin>>a>>b; a--; b--;
+        q[i].l=a; q[i].r=b; q[i].idx=i;
     }
-    sort(all(arr2));
-    arr2.erase(unique(all(arr2)),arr2.end());
-    
-    forn(i,0,n) arr[i]=upper_bound(all(arr2),arr[i])-arr2.begin() ;
-    forn(i,0,q){
-        queries[i].f=upper_bound(all(arr2),queries[i].f)-arr2.begin() ;
-        queries[i].ss=upper_bound(all(arr2),queries[i].ss)-arr2.begin() ;
-    }
-    vi res(q,0);
-    BIT bit(arr2.size()+10);
-    forn(i,0,n){
-        bit.update(arr[i],1);
-        for(auto it:start[i]){
-            int v=bit.query(queries[it].ss)-bit.query(queries[it].f-1);
-            res[it]-=v;
-        }
-        for(auto it:end[i]){
-            int v=bit.query(queries[it].ss)-bit.query(queries[it].f-1);
-            res[it]+=v;
-        }
-    }
-    for(auto it:res) cout<<it<<endl;
+    vi res=mo_solve(arr,q);
 }
 
 int32_t main(){
@@ -108,7 +107,7 @@ cin.tie(NULL);
 // freopen("input.txt", "r", stdin);
 // freopen("output.txt", "w", stdout);
     int t=1;
-    // cin >> t;
+    cin >> t;
     while (t--) {
         solve();
     }

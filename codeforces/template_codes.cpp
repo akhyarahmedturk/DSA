@@ -34,161 +34,136 @@ int NPR(int n, int r){
 
 //Segment Tree
 
-struct Node {
-    int val ;
-    Node( int val = 0 ) : val(val) {}
-    void merge( Node& left , Node& right ) {
-        val = left.val + right.val ;
+struct Node{
+    int val;
+    Node(int val = 0) : val(val){ }
+    void merge(Node& left, Node& right){
+        val = left.val + right.val;
     }
-} ;
+};
 
-struct Update {
-    int val ;
-    Update( int val = 0 ) : val(val) {}
-    void apply( Node& node , int l , int r ) {
-        node.val += val * ( r - l + 1ll ) ; // Currently lazyUpdate is via updating val NOT replacing.
+struct Update{
+    int val;
+    Update(int val = 0) : val(val){ }
+    void apply(Node& node, int l, int r){
+        node.val += val * (r - l + 1ll); // Currently lazyUpdate is via updating val NOT replacing.
     }
-    void propagate( Update& newU ) {
-        val += newU.val ;
+    void propagate(Update& newU){
+        val += newU.val;
     }
-    void modify( Node& node ) {
-        node.val = val ;
+    void modify(Node& node){
+        node.val = val;
     }
-} ;
+};
 
-class SegmentTree {
-    private:
-        int n ;
-        vector<Node> segTree ;
-        vector<Update> lazyTree ;
+class SegmentTree{
+private:
+    int n;
+    vector<Node> segTree;
+    vector<Update> lazyTree;
 
-        void buildTree( int node , int start , int end , vi& arr ) {
-            if( start == end ) {
-                segTree[node] = Node( arr[start] ) ;
-                return ;
+    void buildTree(int node, int start, int end, vi& arr){
+        if (start == end){
+            segTree[node] = Node(arr[start]);
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+        buildTree(2 * node + 1, start, mid, arr);
+        buildTree(2 * node + 2, mid + 1, end, arr);
+        segTree[node].merge(segTree[2 * node + 1], segTree[2 * node + 2]);
+    }
+
+    void updateTree(int i, int l, int r, int& idx, Update& u1){
+        pushdown(i, l, r);
+        if (l == r){
+            u1.modify(segTree[i]);
+            return;
+        }
+
+        int mid = l + (r - l) / 2;
+        if (idx <= mid)
+            updateTree(2 * i + 1, l, mid, idx, u1);
+        else
+            updateTree(2 * i + 2, mid + 1, r, idx, u1);
+
+        segTree[i].merge(segTree[2 * i + 1], segTree[2 * i + 2]);
+    }
+
+    void pushdown(int i, int l, int r){
+        if (lazyTree[i].val){
+            lazyTree[i].apply(segTree[i], l, r);
+            if (l != r){
+                lazyTree[2 * i + 1].propagate(lazyTree[i]);
+                lazyTree[2 * i + 2].propagate(lazyTree[i]);
             }
-
-            int mid = start + (end - start) / 2 ;
-            buildTree( 2 * node + 1 , start , mid , arr ) ;
-            buildTree( 2 * node + 2 , mid + 1 , end , arr ) ;
-            segTree[ node ].merge( segTree[2 * node + 1] , segTree[2 * node + 2] ) ;
-        }
-
-        void updateTree( int i , int l , int r , int& idx , Update& u1 ) {
-            pushdown( i , l , r ) ;
-            if( l == r ) {
-                u1.modify( segTree[i] ) ;
-                return ;
-            }
-
-            int mid = l + (r - l) / 2 ;
-            if( idx <= mid )
-                updateTree( 2*i + 1 , l , mid , idx , u1 ) ;
-            else
-                updateTree( 2*i + 2 , mid + 1 , r , idx , u1 ) ;
-            
-            segTree[i].merge( segTree[2 * i + 1] , segTree[2 * i + 2] ) ;
-        }
-
-        void pushdown( int i , int l , int r ) {
-            if( lazyTree[i].val ) {
-                lazyTree[i].apply( segTree[i] , l , r ) ;
-                if( l != r ) {
-                    lazyTree[2 * i + 1].propagate( lazyTree[i] ) ;
-                    lazyTree[2 * i + 2].propagate( lazyTree[i] );
-                }
-                lazyTree[i] = Update() ;
-            }
-        }
-
-        void lazyUpdateRange( int i , int l , int r , int start , int end , Update& u1 ) {
-            if( r < start || l > end )
-            return ;
-            
-            pushdown( i , l , r ) ;
-            if( start <= l && r <= end ) {
-                u1.apply( segTree[i] , l , r ) ;
-                if( l != r ) {
-                    lazyTree[2 * i + 1].propagate( u1 ) ;
-                    lazyTree[2 * i + 2].propagate( u1 ) ;
-                }
-                return ;
-            }
-
-            int mid = l + (r - l) / 2 ;
-            lazyUpdateRange( 2*i + 1 , l , mid , start , end , u1 ) ;
-            lazyUpdateRange( 2*i + 2 , mid + 1 , r , start , end , u1 ) ;
-            segTree[i].merge( segTree[2 * i + 1] , segTree[2 * i + 2] ) ;
-        }
-
-        Node query( int i , int l , int r , int start , int end ) {
-            if( r < start || l > end )
-                // return Node( numeric_limits<int>::lowest() );
-                return Node() ;
-            
-            pushdown( i , l , r ) ;
-            if( start <= l && r <= end )
-                return segTree[i] ;
-            
-            int mid = l + (r - l) / 2 ;
-            Node left = query( 2*i + 1 , l , mid , start , end ) ;
-            Node right = query( 2*i + 2 , mid + 1 , r , start , end ) ;
-            Node res ;
-            res.merge( left , right ) ;
-            return res ;
-        }
-
-    public:
-        SegmentTree( vi& nums ) : n( nums.size() ) , segTree(4 * n , 0) , lazyTree( 4 * n , 0 ) {
-            // segTree.resize( 2 * n - 1 ) ;
-            fill( all( segTree ) , Node() ) ;
-            fill( all( lazyTree ) , Update() ) ;
-            buildTree( 0 , 0 , n - 1 , nums ) ;
-        }
-
-        void update( int index , int val ) {
-            if( index < 0 || index >= n )  return ;
-            Update u1( val ) ;
-            updateTree( 0 , 0 , n - 1  , index , u1 ) ;
-        }
-
-        void lazyUpdateRange( int start , int end , int val ) {
-            Update u1( val ) ;
-            lazyUpdateRange( 0 , 0 , n - 1 , start , end , u1 ) ;
-        }
-
-        int query( int start , int end ) {
-            // if( start > end )   swap( start, end ) ;
-            return query( 0 , 0 , n - 1 , start , end ).val ;
-        }
-} ;
-
-// dijkstra 
-
-int dijkstra(int src, int dst, vector<vector<pii>>& graph){
-    int n = graph.size();
-    vi dist(n, LONG_LONG_MAX);
-    priority_queue<pii, vector<pii>, greater<pii>> pq;
-    dist[src] = 0;
-    pq.push({ 0,src });
-    while (!pq.empty()){
-        int v = pq.top().second;
-        int d = pq.top().first;
-        pq.pop();
-        if (d > dist[v]) continue;
-        for (auto u : graph[v]){
-            if (d + u.second < dist[u.first]){
-                pq.push({ u.first,d + u.second });
-                dist[u.first] = d + u.second;
-            }
+            lazyTree[i] = Update();
         }
     }
-    if (dist[dst] == LONG_LONG_MAX) return -1;
-    else return dist[dst];
-}
+
+    void lazyUpdateRange(int i, int l, int r, int start, int end, Update& u1){
+        if (r < start || l > end)
+            return;
+
+        pushdown(i, l, r);
+        if (start <= l && r <= end){
+            u1.apply(segTree[i], l, r);
+            if (l != r){
+                lazyTree[2 * i + 1].propagate(u1);
+                lazyTree[2 * i + 2].propagate(u1);
+            }
+            return;
+        }
+
+        int mid = l + (r - l) / 2;
+        lazyUpdateRange(2 * i + 1, l, mid, start, end, u1);
+        lazyUpdateRange(2 * i + 2, mid + 1, r, start, end, u1);
+        segTree[i].merge(segTree[2 * i + 1], segTree[2 * i + 2]);
+    }
+
+    Node query(int i, int l, int r, int start, int end){
+        if (r < start || l > end)
+            // return Node( numeric_limits<int>::lowest() );
+            return Node();
+
+        pushdown(i, l, r);
+        if (start <= l && r <= end)
+            return segTree[i];
+
+        int mid = l + (r - l) / 2;
+        Node left = query(2 * i + 1, l, mid, start, end);
+        Node right = query(2 * i + 2, mid + 1, r, start, end);
+        Node res;
+        res.merge(left, right);
+        return res;
+    }
+
+public:
+    SegmentTree(vi& nums) : n(nums.size()), segTree(4 * n, 0), lazyTree(4 * n, 0){
+        // segTree.resize( 2 * n - 1 ) ;
+        fill(all(segTree), Node());
+        fill(all(lazyTree), Update());
+        buildTree(0, 0, n - 1, nums);
+    }
+
+    void update(int index, int val){
+        if (index < 0 || index >= n)  return;
+        Update u1(val);
+        updateTree(0, 0, n - 1, index, u1);
+    }
+
+    void lazyUpdateRange(int start, int end, int val){
+        Update u1(val);
+        lazyUpdateRange(0, 0, n - 1, start, end, u1);
+    }
+
+    int query(int start, int end){
+        // if( start > end )   swap( start, end ) ;
+        return query(0, 0, n - 1, start, end).val;
+    }
+};
 
 // Floyd Warshall
-
 vector<vi> dist(n, vi(n, inf));
 forn(i, 0, m){
     int u, v, w;
@@ -288,7 +263,7 @@ public:
     BinaryLifting(int size, vector<vi>& graph){
         n = size;
         LOG = 32 - __builtin_clz(n); // ceil(log2(n))
-        up.assign(n, vi(LOG,-1));
+        up.assign(n, vi(LOG, -1));
         depth.assign(n, 0);
         adj = graph;
     }
@@ -296,6 +271,13 @@ public:
     void preprocess(int root = 0){
         dfs(root, -1);
     }
+
+    // void preprocess(){ for Directed Cyclic graphs ( planet queries)
+    //     forn(i,1,n) up[0][i]=adj[i];//child 2^0=1 dis py hoga
+    //     forn(i,1,LOG){
+    //         forn(j,1,n) up[i][j]=  up[i-1][up[i-1][j]];//2^1 hy to child ka child
+    //     }
+    // }
 
     // kth ancestor of node u
     int lift(int u, int k){
@@ -412,14 +394,14 @@ struct DSU{
 };
 
 
-//compression
+// quadratic compression
 forn(i, 0, n){
     comp.pb(arr[i]);
 }
 sort(all(comp));
 comp.erase(unique(all(comp)), comp.end());
 forn(i, 0, n){
-    arr[i] = lower_bound(all(comp), arr[i]) - comp.begin() + 1;
+    arr[i] = upper_bound(all(comp), arr[i]) - comp.begin();  // 1,2,3.....
 }
 
 
@@ -428,34 +410,34 @@ forn(i, 0, n){
 const int ALPHA = 26;
 // const int MAXN = 2000000;   // total characters
 
-struct TrieNode {
+struct TrieNode{
     TrieNode* child[ALPHA];
-    int cnt,end;
+    int cnt, end;
 
-    TrieNode() {
-        cnt = 0; end=0;
-        for(int i = 0; i < 26; i++) child[i] = nullptr;
+    TrieNode(){
+        cnt = 0; end = 0;
+        for (int i = 0; i < 26; i++) child[i] = nullptr;
     }
 };
 
-struct Trie {
+struct Trie{
     TrieNode* root;
     Trie() root = new TrieNode();
-    void insert(const string &s) {
+    void insert(const string& s){
         TrieNode* cur = root;
-        for(char c : s) {
+        for (char c : s){
             int id = c - 'a';
-            if(cur->child[id] == nullptr) cur->child[id] = new TrieNode();
+            if (cur->child[id] == nullptr) cur->child[id] = new TrieNode();
             cur = cur->child[id];
             cur->cnt++;
         }
         cur->end++;
     }
-    int search(const string &s) {
+    int search(const string& s){
         TrieNode* cur = root;
-        for(char c : s) {
+        for (char c : s){
             int id = c - 'a';
-            if(cur->child[id] == nullptr) return 0;
+            if (cur->child[id] == nullptr) return 0;
             cur = cur->child[id];
         }
         return cur->end;
@@ -465,16 +447,16 @@ struct Trie {
 
 //Mo's Algo
 
-struct Query {
+struct Query{
     int l, r, idx; //0 based
 };
 
-vector<int> mo_solve(const vector<int> &arr, vector<Query> queries) {
+vector<int> mo_solve(const vector<int> &arr, vector<Query> queries){
     int n = arr.size();
     int q = queries.size();
-    int block = max(1LL, (int) sqrt(n));
+    int block = max(1LL, (int)sqrt(n));
 
-    sort(queries.begin(), queries.end(), [&](const Query &a, const Query &b) {
+    sort(queries.begin(), queries.end(), [&](const Query& a, const Query& b){
         int block_a = a.l / block;
         int block_b = b.l / block;
         if (block_a != block_b) return block_a < block_b;
@@ -484,23 +466,23 @@ vector<int> mo_solve(const vector<int> &arr, vector<Query> queries) {
 
     vector<int> ans(q);
 
-    vector<int> freq(1e6+10, 0);  // example freq array for values up to 1e6
+    vector<int> freq(1e6 + 10, 0);  // example freq array for values up to 1e6
     int cur_answer = 0;              // example: count distinct numbers
     // multiset<int> st;
 
-    auto add = [&](int idx) {
+    auto add = [&](int idx){
         int x = arr[idx];
-        if (freq[x]==0) cur_answer++;
+        if (freq[x] == 0) cur_answer++;
         freq[x]++;
-    };
+        };
 
-    auto remove = [&](int idx) {
+    auto remove = [&](int idx){
         int x = arr[idx];
         freq[x]--;
-        if(freq[x]==0) cur_answer--;
-    };
+        if (freq[x] == 0) cur_answer--;
+        };
     int L = 0, R = -1;
-    for (auto &qr : queries) {
+    for (auto& qr : queries){
         while (L > qr.l) add(--L);
         while (R < qr.r) add(++R);
         while (L < qr.l) remove(L++);
@@ -511,3 +493,81 @@ vector<int> mo_solve(const vector<int> &arr, vector<Query> queries) {
 
     return ans;
 }
+
+
+
+//SCC( kosaraju )
+
+class SCC{
+    vector<bool> vis;
+    vi order;
+
+    void dfs1(int u){
+        vis[u] = true;
+        for (int v : g[u])
+            if (!vis[v])
+                dfs1(v);
+        order.push_back(u);
+    }
+
+    void dfs2(int u, vi& comp){
+        vis[u] = true;
+        comp.push_back(u);
+        for (int v : rg[u])
+            if (!vis[v])
+                dfs2(v, comp);
+    }
+
+    void find_scc(int n){
+        vis.assign(n, false);
+        order.clear();
+        for (int i = 0; i < n; ++i)
+            if (!vis[i])
+                dfs1(i);
+
+        vis.assign(n, false);
+        reverse(order.begin(), order.end());
+        scc.clear();
+        component_id.assign(n, -1);
+        int id = 0;
+        for (int u : order)
+            if (!vis[u]){
+                vector<int> comp;
+                dfs2(u, comp);
+                for (int v : comp){
+                    component_id[v] = id;
+                }
+                scc.push_back(comp);
+                id++;
+            }
+    }
+    void build_condened_graph(vector<pii>& edges){
+        int k = scc.size();
+        dag.assign(k, {});
+        for (auto [u, v] : edges){
+            int cu = component_id[u];
+            int cv = component_id[v];
+            if (cu != cv){
+                dag[cu].push_back(cv);
+            }
+        }
+    }
+public:
+    vi component_id;
+    vector<vi> dag;
+    vector<vi> g, rg, scc;
+    SCC(int n, vector<pii>& edges){
+        g.assign(n, {});
+        rg.assign(n, {});
+        for (auto& e : edges){
+            int u = e.first;
+            int v = e.second;
+            g[u].push_back(v);
+            rg[v].push_back(u);
+        }
+        find_scc(n);
+        build_condened_graph(edges);
+    }
+
+};
+

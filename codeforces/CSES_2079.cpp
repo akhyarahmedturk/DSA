@@ -1,8 +1,11 @@
-/*
+/*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-11 12:51 (GMT+5)
+*    Created: 2026-01-27 07:23 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
+
+*    Those who can't remember the past are condemned to repeat it.
+*                                                 -Dynamic Programming.
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -23,65 +26,62 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 #define f first
 #define ss second
 #define vi vector<int>
+#define vb vector<bool>
+#define vvi vector<vi>
 #define all(a) a.begin(), a.end()
 #define allr(a) a.rbegin(), a.rend()
 #define mod 1000000007
 #define mod2 998244353
 const int inf = 1e17 + 1;
+#define INT_MAX LLONG_MAX
+#define nl "\n"
 
 #define forn(i, a, b) for (int i = a; i < b; i++)
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-struct BIT {
-    int n;
-    vi bit;
-    BIT(int nn) {
-        n = nn;
-        bit.assign(n + 2, 0);
+int n,res=-1;
+
+void dfs1(int idx,int p,vector<vi> &graph,vi &dp){
+    dp[idx]=1;
+    for(auto it:graph[idx]){
+        if(it==p) continue;
+        dfs1(it,idx,graph,dp);
+        dp[idx]+=dp[it];
     }
-    // Point update: add 'val' to index 'i'
-    void update(int i,int val) { //bit[i]+=x;
-        while (i <= n) {
-            bit[i]+=val;
-            i += i & -i;
-        }
+}
+
+void dfs2(int idx,int p,int curr,vector<vi> &graph,vi &dp){
+    bool check=true;
+    if(curr>n/2) check=false;
+    curr=curr+dp[idx];
+    for(auto it:graph[idx]){
+        if(it==p) continue;
+        dfs2(it,idx,curr-dp[it],graph,dp);
+        if(dp[it]>n/2) check=false;
     }
-    // Prefix sum: sum[1...i]
-    int query(int i) {
-        int res=0;
-        while (i > 0) {
-            res+=bit[i];
-            i -= i & -i;
-        }
-        return res;
-    }
-};
+    if(check) res=idx;
+}
 
 void solve() {
-    int n,k; cin>>n;
-    vi arr(n),ya(n); input(arr,n); input(ya,n);
-    BIT bit(n+2);
-    for(auto it:ya){
-        int l=1,r=n,mid,res;
-        while(l<=r){
-            mid=(l+r)/2;
-            int t=mid-bit.query(mid);
-            if(t>=it){
-                res=mid;
-                r=mid-1;
-            }
-            else l=mid+1;
-        }
-        bit.update(res,1);
-        cout<<arr[res-1]<<" ";
-    } 
-    cout<<endl;
+    cin>>n;
+    vector<vi> graph(n+1);
+    forn(i,0,n-1){
+        int a,b; cin>>a>>b; 
+        graph[a].pb(b);
+        graph[b].pb(a);
+    }
+    vi dp(n+1,0);
+    dfs1(1,-1,graph,dp);
+    dfs2(1,-1,0,graph,dp);
+    cout<<res<<endl;
 }
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
+// freopen("input.txt", "r", stdin);
+// freopen("output.txt", "w", stdout);
     int t=1;
     // cin >> t;
     while (t--) {

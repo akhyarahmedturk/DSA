@@ -1,8 +1,11 @@
-/*
+/*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-09-11 12:51 (GMT+5)
+*    Created: 2026-01-24 15:47 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
+
+*    Those who can't remember the past are condemned to repeat it.
+*                                                 -Dynamic Programming.
 */
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -23,35 +26,41 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 #define f first
 #define ss second
 #define vi vector<int>
+#define vb vector<bool>
+#define vvi vector<vi>
 #define all(a) a.begin(), a.end()
 #define allr(a) a.rbegin(), a.rend()
 #define mod 1000000007
 #define mod2 998244353
 const int inf = 1e17 + 1;
+#define INT_MAX LLONG_MAX
+#define nl "\n"
 
 #define forn(i, a, b) for (int i = a; i < b; i++)
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-struct BIT {
+// BIT Fenwick Tree
+
+struct BIT{
     int n;
     vi bit;
-    BIT(int nn) {
+    BIT(int nn){
         n = nn;
         bit.assign(n + 2, 0);
     }
     // Point update: add 'val' to index 'i'
-    void update(int i,int val) { //bit[i]+=x;
-        while (i <= n) {
-            bit[i]+=val;
+    void update(int i, int val){ //bit[i]+=x;
+        while (i <= n){
+            bit[i] += val;
             i += i & -i;
         }
     }
     // Prefix sum: sum[1...i]
-    int query(int i) {
-        int res=0;
-        while (i > 0) {
-            res+=bit[i];
+    int query(int i){
+        int res = 0;
+        while (i > 0){
+            res += bit[i];
             i -= i & -i;
         }
         return res;
@@ -59,29 +68,29 @@ struct BIT {
 };
 
 void solve() {
-    int n,k; cin>>n;
-    vi arr(n),ya(n); input(arr,n); input(ya,n);
-    BIT bit(n+2);
-    for(auto it:ya){
-        int l=1,r=n,mid,res;
-        while(l<=r){
-            mid=(l+r)/2;
-            int t=mid-bit.query(mid);
-            if(t>=it){
-                res=mid;
-                r=mid-1;
-            }
-            else l=mid+1;
+    int n,q; cin>>n>>q;
+    vi arr(n); input(arr,n);
+    BIT add(n+2),sub(n+2);
+    while(q--){
+        int x; cin>>x;
+        if(x==1){
+            int a,b,val; cin>>a>>b>>val;
+            add.update(a,val);
+            sub.update(b+1,val);
         }
-        bit.update(res,1);
-        cout<<arr[res-1]<<" ";
+        else{
+            int idx; cin>>idx;
+            int sum=arr[idx-1]+add.query(idx)-sub.query(idx);
+            cout<<sum<<endl;
+        }
     } 
-    cout<<endl;
 }
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
+// freopen("input.txt", "r", stdin);
+// freopen("output.txt", "w", stdout);
     int t=1;
     // cin >> t;
     while (t--) {
