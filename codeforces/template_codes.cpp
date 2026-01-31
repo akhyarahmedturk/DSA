@@ -168,16 +168,19 @@ vector<vi> dist(n, vi(n, inf));
 forn(i, 0, m){
     int u, v, w;
     cin >> u >> v >> w; u--; v--;
-    dist[u][v] = w;
-    dist[v][u] = w;
+    dist[u][v] = min(dist[u][v] ,w);
+    dist[v][u] = min(dist[u][v] ,w);
 }
-forn(k, 0, n){
-    dist[k][k] = 0;
-    forn(i, 0, n){
-        if (dist[i][k] == inf) continue;
-        forn(j, 0, n){
-            if (i == j) dist[i][j] = 0;
-            else if (dist[j][k] != inf) dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+FW(dist,n);
+void FW(vector<vi>& dist,int n){
+    for (int i = 0; i < n; i++) dist[i][i] = 0LL;
+    for (int k = 0; k < n; k++){
+        for (int i = 0; i < n; i++){
+            if (dist[i][k] == inf) continue;
+            for (int j = 0; j < n; j++){
+                if (dist[k][j] == inf) continue;
+                dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+            }
         }
     }
 }
@@ -194,11 +197,12 @@ for (int i = 2; i * i <= N; i++){
 }
 
 // belman ford
+// cycle check karny ky liy pori outer loop dobara chlao
 vi bellman_ford(int src, vector<vector<pii>> &graph){
     int n = graph.size();
     vi dist(n, LONG_LONG_MAX);
     dist[src] = 0;
-    for (int i = 0; i < n - 1; i++){
+    for (int i = 0; i < n ; i++){// n tak chlao issue aa sakta( High Score CSES)
         for (int u = 0; u < n; u++){
             for (auto& edge : graph[u]){
                 int v = edge.first;
@@ -351,7 +355,7 @@ struct BIT{
 
 // bridges in graph
 
-vvi res;
+se res;
 vector<set<int>> graph;
 int DFS(int idx, vi & vis, vi & count){
     vis[idx] = 1;
