@@ -168,11 +168,11 @@ vector<vi> dist(n, vi(n, inf));
 forn(i, 0, m){
     int u, v, w;
     cin >> u >> v >> w; u--; v--;
-    dist[u][v] = min(dist[u][v] ,w);
-    dist[v][u] = min(dist[u][v] ,w);
+    dist[u][v] = min(dist[u][v], w);
+    dist[v][u] = min(dist[u][v], w);
 }
-FW(dist,n);
-void FW(vector<vi>& dist,int n){
+FW(dist, n);
+void FW(vector<vi>& dist, int n){
     for (int i = 0; i < n; i++) dist[i][i] = 0LL;
     for (int k = 0; k < n; k++){
         for (int i = 0; i < n; i++){
@@ -202,7 +202,7 @@ vi bellman_ford(int src, vector<vector<pii>> &graph){
     int n = graph.size();
     vi dist(n, LONG_LONG_MAX);
     dist[src] = 0;
-    for (int i = 0; i < n ; i++){// n tak chlao issue aa sakta( High Score CSES)
+    for (int i = 0; i < n; i++){// n tak chlao issue aa sakta( High Score CSES)
         for (int u = 0; u < n; u++){
             for (auto& edge : graph[u]){
                 int v = edge.first;
@@ -575,3 +575,18 @@ public:
 
 };
 
+
+// MULTI LINE INPUT
+
+string line;
+while (getline(cin, line)){
+    if (line.empty()) continue;   // skip empty lines (optional)
+
+    stringstream ss(line);
+    vector<int> v;// can be vector<string>
+    int x;
+
+    while (ss >> x) v.push_back(x);
+
+    // process this line
+}
