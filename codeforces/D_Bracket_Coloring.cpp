@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-02-26 15:48 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,47 +40,31 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
-
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
-    }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
-    }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
-}
-
 void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
+    int n; cin>>n;
+    string s; cin>>s;
+    int c=0;
+    for(auto it:s) c+=(it=='(');
+    if(c*2!=n) { cout<<-1<<endl; return;}
+    int c1=0,c2=0;
+    vi res;
+    c=0;
+    for(auto it:s){
+        if(it=='('){
+            if(c2){ res.pb(2); c2--;}
+            else { res.pb(1); c1++; }
         }
+        else{
+            if(c1){ res.pb(1); c1--;}
+            else { res.pb(2); c2++; }
+        }
+        c+=(res.back()==2);
     }
-    cout<<res<<endl;
+    if(c==n || c==0) c=1;
+    else c=2;
+    cout<<c<<endl;
+    forn(i,0,n) cout<<(c==1?1:res[i])<<" ";
+    cout<<endl;
 }
 
 int32_t main(){
@@ -90,7 +74,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

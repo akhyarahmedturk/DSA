@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-03-01 21:05 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,47 +40,35 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
-
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
-    }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
-    }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
-}
-
 void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
-        }
+    int n; cin>>n;
+    vi arr(n); input(arr,n);
+    // monotonic stack
+    vi ya1(n,1),ya2(n,1);
+    stack<pii> st1; st1.push({arr[n-1],1});
+    stack<pii> st2; st2.push({arr[0],1});
+    forr(i,n-2,0){
+        while(!st1.empty() && st1.top().f<arr[i]) st1.pop();
+        int ya=0;
+        if(!st1.empty()) ya=st1.top().ss;
+        ya1[i]=ya+1;
+        st1.push({arr[i],ya1[i]});
     }
-    cout<<res<<endl;
+    forn(i,1,n){
+        while(!st2.empty() && st2.top().f<arr[i]) st2.pop();
+        int ya=0;
+        if(!st2.empty()) ya=st2.top().ss;
+        ya2[i]=ya+1;
+        st2.push({arr[i],ya2[i]});
+    }
+    int res=2;
+    forn(i,1,n-1){
+        // dono side bary hy to dono taraf extend karsakty
+        if(arr[i]<arr[i-1] && arr[i]<arr[i+1]) res=max(res,ya1[i]+ya2[i]-1);
+    }
+    if(arr[2]>arr[1]) res=max(res,ya1[1]+1);
+    if(arr[n-3]>arr[n-2]) res=max(res,ya2[n-2]+1);
+    cout<<n-res<<endl;
 }
 
 int32_t main(){
@@ -90,7 +78,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

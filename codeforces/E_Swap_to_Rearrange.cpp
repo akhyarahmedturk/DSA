@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-03-03 13:57 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,47 +40,54 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
-
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
-    }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
-    }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
-}
-
 void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
+    int n; cin>>n;
+    vi a(n),b(n); input(a,n); input(b,n);
+    vector<set<int>> g1(n+1),g2(n+1);
+    vi mp(n+1,0);
+    vi vis(n,0);
+    forn(i,0,n){
+        if(a[i]==b[i]) {
+            vis[i]=1;
+            continue;
+        }
+        mp[a[i]]++;
+        mp[b[i]]++;
+        g1[a[i]].insert(i);
+        g2[b[i]].insert(i);
+    }
+    forn(i,1,n+1){
+        // euler cycle
+        if(mp[i]%2){ cout<<-1<<endl; return;}
+    }
+    vi res;
+    forn(i,0,n){
+        if(vis[i]) continue;
+        int curr=i;
+        g1[a[curr]].erase(curr);
+        g2[b[curr]].erase(curr);
+        vis[curr]=1;
+        // run karo jab tak circle complete na ho
+        // agar a me nahi milta to reverse karo
+        while(b[curr]!=a[i]){
+            bool ya=false;
+            if(!g1[b[curr]].empty())  curr=*g1[b[curr]].begin();
+            else if(!g2[b[curr]].empty()){
+                ya=true;
+                curr=*g2[b[curr]].begin();
+            }
+            else {cout<<-1<<endl; return;}
+            g1[a[curr]].erase(curr);
+            g2[b[curr]].erase(curr);
+            vis[curr]=1;
+            if(ya){ res.pb(curr+1); swap(a[curr],b[curr]);}
+            // cout<<curr<<" ";
         }
     }
-    cout<<res<<endl;
+    sort(all(res));
+    cout<<res.size()<<endl;
+    for(auto it:res) cout<<it<<" ";
+    cout<<endl;
 }
 
 int32_t main(){
@@ -90,7 +97,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

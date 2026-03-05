@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-03-04 15:14 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -17,7 +17,7 @@ template <typename T>
 using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 // use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
 // idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
-// idx.find_by_order(n); to get the nth value by order
+// idx[0]ind_by_order(n); to get the nth value by order
 #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
@@ -40,47 +40,25 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
-
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
-    }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
-    }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
-}
-
 void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
-        }
+    int n; cin>>n;
+    vector<vi> arr(n,vi(3,0)),a,b;
+    forn(i,0,n){
+        arr[i][2]=i;
+        cin>>arr[i][0]>>arr[i][1]; 
     }
-    cout<<res<<endl;
+    sort(all(arr));
+    forn(i,0,n/2) a.pb(arr[i]);
+    forn(i,n/2,n) b.pb(arr[i]);
+    sort(all(a),[](vi &aa,vi &bb){
+        if(aa[1]!=bb[1]) return aa[1]>bb[1];
+        return aa[0]<bb[0];
+    });
+    sort(all(b),[](vi &aa,vi &bb){
+        if(aa[1]!=bb[1]) return aa[1]<bb[1];
+        return aa[0]<bb[0];
+    });
+    forn(i,0,n/2) cout<<a[i][2]+1<<" "<<b[i][2]+1<<endl;
 }
 
 int32_t main(){
@@ -90,7 +68,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

@@ -500,7 +500,7 @@ vector<int> mo_solve(const vector<int> &arr, vector<Query> queries){
 
 
 
-//SCC( kosaraju )
+//SCC( kosaraju ) (0-based edge list)
 
 class SCC{
     vector<bool> vis;
@@ -594,29 +594,88 @@ while (getline(cin, line)){
 
 //Manacher
 
-struct Manacher {
+struct Manacher{
     vi p;
     string t;
-    Manacher(const string &s) {
+    Manacher(const string& s){
         t = "#";
         for (char c : s){
             t += c, t += '#';
         }
         int n = (int)t.size();
         p.assign(n, 1);
-        for (int i = 0, l = 0, r = 0; i < n; i++) {
+        for (int i = 0, l = 0, r = 0; i < n; i++){
             if (i <= r) p[i] = min(r - i + 1, p[l + r - i]);
             while (i - p[i] >= 0 && i + p[i] < n && t[i - p[i]] == t[i + p[i]]) p[i]++;
             if (i + p[i] - 1 > r){
                 l = i - p[i] + 1,
-                r = i + p[i] - 1;
+                    r = i + p[i] - 1;
             }
         }
     }
-    int odd(int i) {  return p[2 * i + 1] - 1; }
-    int even(int i) { return p[2 * i + 2] - 1;  }
-    bool isPal(int l, int r) {
+    int odd(int i){ return p[2 * i + 1] - 1; }
+    int even(int i){ return p[2 * i + 2] - 1; }
+    bool isPal(int l, int r){
         int len = r - l + 1;
         return p[l + r + 1] - 1 >= len;
     }
 };
+
+
+// euler cycle(1-based edge list)
+
+// for directed graphs(indeg=outdeg)
+
+// for Euler path
+// start and end ki degree odd hogi cause start py wapis nahi aana ans same for end
+// baqi sab ki degree even
+
+
+
+vi getEulerCycle(int n, int m, vector<pii> &edges){
+    vector<vector<pii>> adj(n + 1);
+    vi degree(n + 1, 0);
+    vector<bool> used(m, false);
+    // Build graph
+    for (int i = 0; i < m; i++){
+        auto [u, v] = edges[i];
+        adj[u].pb({ v, i });
+        adj[v].pb({ u, i });
+        degree[u]++;
+        degree[v]++;
+    }
+    // Check even degree condition
+    for (int i = 1; i <= n; i++){
+        if (degree[i] % 2 != 0)
+            return {};  // No Euler cycle
+    }
+    int start = 1;
+    // Find starting node (with degree > 0)
+    while (start <= n && adj[start].empty()) start++;
+    if (start > n) return {}; // no edges
+    vi euler;
+    stack<int> st;
+    st.push(start);
+    while (!st.empty()){
+        int u = st.top();
+        while (!adj[u].empty() && used[adj[u].back().second])
+            adj[u].pop_back();
+        if (adj[u].empty()){
+            euler.pb(u);
+            st.pop();
+        }
+        else{
+            auto [v, id] = adj[u].back();
+            adj[u].pop_back();
+
+            if (!used[id]){
+                used[id] = true;
+                st.push(v);
+            }
+        }
+    }
+    if ((int)euler.size() != m + 1)
+        return {}; // Not connected
+    reverse(euler.begin(), euler.end());
+    return euler;
+}

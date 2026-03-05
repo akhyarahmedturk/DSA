@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-02-28 02:41 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,47 +40,38 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
-
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
-    }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
-    }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
-}
-
 void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
+    int n,m; cin>>n>>m;
+    vector<pii> a(n),b(m);
+    forn(i,0,n) cin>>a[i].f>>a[i].ss;
+    forn(i,0,m) cin>>b[i].f>>b[i].ss;
+    vector<vi> mp(n+1);
+    forn(i,0,n) mp[a[i].ss].pb(a[i].f);
+    multiset<int> st;
+    vi mx(n+2,0);// (i items >= i)
+    int res=0,sum=0;
+    forr(i,n,0){
+        for(auto it:mp[i]){
+            sum+=it;
+            st.insert(it);
+            if(st.size()>i+1){ 
+                sum-=*(st.begin()); 
+                st.erase(st.begin());
+            }
         }
+        res=max(res,sum);
+        if(st.size()>i){ 
+            sum-=*(st.begin()); 
+            st.erase(st.begin());
+        }
+        mx[i]=sum;
     }
-    cout<<res<<endl;
+    vi prefix(n+1); prefix[0]=mx[0];
+    forn(i,1,n+1) prefix[i]=max(prefix[i-1],mx[i]);
+    for(auto it:b){
+        cout<<max(res,prefix[it.ss]+it.f)<<" ";
+    }
+    cout<<endl;
 }
 
 int32_t main(){
@@ -90,7 +81,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

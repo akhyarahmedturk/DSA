@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-02-08 14:20 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,47 +40,56 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
-
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
+string check(int mid,int n,vector<vi> &mp){
+    string res(mid,'-');
+    forn(i,0,mid){
+        char ya='-';
+        forn(j,0,26){
+            int kk=i;
+            bool ch=false;
+            while(kk<n){
+                if(!mp[kk][j]){ ch=true; break;}
+                kk+=mid;
+            }
+            if(!ch){
+                ya='a'+j;
+                break;
+            }
+        }
+        if(ya!='-'){
+            res[i]=ya;
+        }
+        else return "";
     }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
-    }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
+    return res;
 }
 
 void solve() {
     int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
+    vector<vi> mp(n,vi(26,0));
+    forn(i,0,k){
+        forn(j,0,n){
+            char ch; cin>>ch;
+            mp[j][ch-'a']++;
         }
     }
-    cout<<res<<endl;
+    string res="";
+    for(int i=1;i*i<=n;i++){
+        if(n%i==0){
+            string ya=check(i,n,mp);
+            if(ya!=""){
+                res=ya;
+                break;
+            }
+            ya=check(n/i,n,mp);
+            if(ya!=""){
+                res=ya;
+            }
+        }
+    }
+    string rr="";
+    while(rr.length()<n) rr+=res;
+    cout<<rr<<endl;
 }
 
 int32_t main(){
@@ -90,7 +99,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

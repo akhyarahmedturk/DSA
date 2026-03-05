@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-02-26 00:35 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -18,7 +18,7 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 // use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
 // idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
 // idx.find_by_order(n); to get the nth value by order
-#define int long long
+// #define int long long
 #define ld long double
 #define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
 #define pii pair<int, int>
@@ -40,47 +40,29 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
-
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
-    }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
-    }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
-}
-
 void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
-        }
+    int n,m; cin>>n>>m;
+    vi a(n),b(m); input(a,n); input(b,m);
+    sort(all(a));
+    a.erase(unique(all(a)),a.end());
+    vi mp(n+m+10,0);
+    for(auto it:a){
+        for(int i=it;i<=n+m;i+=it) mp[i]++; 
     }
-    cout<<res<<endl;
+    int c1=0,c2=0,c3=0;
+    for(auto it:b){
+        if(mp[it]==0) c1++;
+        else if(mp[it]==a.size()) c2++;
+        else c3++;
+    }
+    if(c3&1){
+        if(c2>=c1) cout<<"Alice"<<nl;
+        else cout<<"Bob"<<nl;
+    } 
+    else{
+        if(c2>c1) cout<<"Alice"<<nl;
+        else cout<<"Bob"<<nl;
+    }
 }
 
 int32_t main(){
@@ -90,7 +72,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

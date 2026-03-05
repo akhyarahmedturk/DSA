@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-02-25 14:20 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,47 +40,40 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
-
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
+pii dfs(int curr,int idx,int &val,int &val2){
+    if(idx==-1) return {val-curr,curr};
+    else if((1LL<<idx)&val2) return dfs(curr,idx-1,val,val2);// dosry me y bit on hy to yhan nahi le sakty
+    else if(curr+(1LL<<idx)<=val){ // agar y bit lene ky bad bhi val sy kam hy to multiple option hen
+        int next=curr+(1LL<<(idx+1))-1;
+        next-=(val2&next);
+        // agar aagy wali saari bits on kar ky bhi < val ho to direct on kardo sabko
+        if(next>val){
+            // ab dono option try karny hongy
+            pii ya=dfs(curr,idx-1,val,val2);
+            pii ya2=dfs(curr+(1LL<<idx),idx-1,val,val2);
+            if(ya.f<ya2.f) return ya;
+            else return ya2;
+        }
+        else return {val-next,next};
     }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
+    else{
+        // as absolute diff hy thora uper jaa ky bhi dekh sakty
+        pii ya=dfs(curr,idx-1,val,val2);
+        if(ya.f<curr+(1LL<<idx)-val) return ya;
+        else return {curr+(1LL<<idx)-val,curr+(1LL<<idx)};
     }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
 }
 
 void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
-        }
-    }
-    cout<<res<<endl;
+    int a,b; cin>>a>>b;
+    if(a&b==0) { cout<<a<<" "<<b<<endl; return;}
+    //aik ko same rakho dosry ki liy diff values py try karo
+    int p=a;
+    pii ya=dfs(0,30,b,p);
+    int qq=b;
+    pii ya2=dfs(0,30,a,qq);
+    if(ya2.f<ya.f) cout<<ya2.ss<<" "<<qq<<endl;
+    else cout<<p<<" "<<ya.ss<<endl;
 }
 
 int32_t main(){
@@ -90,7 +83,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

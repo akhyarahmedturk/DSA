@@ -1,7 +1,6 @@
-
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 22:26 (GMT+5)
+*    Created: 2026-02-23 11:20 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -41,34 +40,62 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void dfs(int idx,int p,vector<vi> &graph,vector<vi> &dp){
-    dp[idx][1]=1;
-    int size=graph[idx].size()-(p!=-1);
-    if(!size) return ;
-    dp[idx][size%3]=1;
-    int two=0,three=0;
+void dfs1(int idx,int p,vi &depth,vi &cost,vi &sum,vi &arr,vector<vi> &graph){
+    sum[idx]=arr[idx-1];
     for(auto it:graph[idx]){
         if(it==p) continue;
-        dfs(it,idx,graph,dp);
-        two+=dp[it][2];
-        three+=dp[it][0];
+        dfs1(it,idx,depth,cost,sum,arr,graph);
+        cost[idx]+=cost[it]+sum[it];
+        sum[idx]+=sum[it];
+        depth[idx]=max(depth[idx],depth[it]+1);
     }
-    if(two>=2 || three>=2) dp[idx]={1,1,1};
-    else if(two) dp[idx][(size+1)%3]=1;
-    if(three) dp[idx][(size+2)%3]=1;
+}
+
+void dfs2(int idx,int p,vi &depth,vi &cost,vi &sum,vi &arr,vector<vi> &graph,vi &res){
+    vi ya={0,0};
+    for(auto it:graph[idx]){
+        if(it==p) continue;
+        ya.pb(depth[it]);
+        sort(allr(ya)); ya.pop_back();
+    }
+    res[idx]=cost[idx];
+    for(auto it:graph[idx]){
+        if(it==p) continue;
+        dfs2(it,idx,depth,cost,sum,arr,graph,res);
+        int curr_sum=sum[it];
+        //is subtree to max depth tak ly jao
+        if(depth[it]==ya[0]) res[idx]=max(res[idx],cost[idx]+curr_sum*(ya[1]+1));
+        else res[idx]=max(res[idx],cost[idx]+curr_sum*(ya[0]+1));
+        res[idx]=max(res[idx],cost[idx]+(res[it]-cost[it]));
+    }
+    if(idx==1){// 1 hi child hy
+        if(graph[idx].size()==1) res[idx]=res[graph[idx][0]]+sum[graph[idx][0]];
+    }
+    else if(graph[idx].size()==2){ // child 1 hi hy magar size=2 because parent ka edge bhi hy
+        if(graph[idx][0]==p){
+            res[idx]=res[graph[idx][1]]+sum[graph[idx][1]];
+        }
+        else{
+            res[idx]=res[graph[idx][0]]+sum[graph[idx][0]];
+        }
+    }
+    // cout<<" idx "<<idx<<" dept "<<depth[idx]<<" sum "<<sum[idx]<<" cost "<<cost[idx]<<endl;
 }
 
 void solve() {
     int n; cin>>n;
-    vector<vi> graph(n);
+    vi arr(n); input(arr,n);
+    vector<vi> graph(n+1);
     forn(i,0,n-1){
-        int a,b; cin>>a>>b; a--; b--;
+        int a,b; cin>>a>>b;
         graph[a].pb(b);
         graph[b].pb(a);
     }
-    vector<vi> dp(n,vi(3,0));
-    dfs(0,-1,graph,dp);
-    yesno(dp[0][0]);
+    vi depth(n+1,0),cost(n+1,0),sum(n+1,0),res(n+1,0);
+    dfs1(1,-1,depth,cost,sum,arr,graph);
+    dfs2(1,-1,depth,cost,sum,arr,graph,res);
+    forn(i,0,n) cout<<res[i+1]<<" ";
+    cout<<endl;
 }
 
 int32_t main(){

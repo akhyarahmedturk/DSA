@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-02-16 22:49 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,47 +40,63 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
 
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
-    }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
-    }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
-}
-
-void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
+pii ask(int mid){
+    cout<<"? "<<mid<<endl;
+    pii ya={-1,-1};
+    int size;
+    cin>>size;
+    if(size==-1){ exit(1);}
+    if(size==0) return ya;//path hi nahi hy
+    cin>>ya.f;
+    if(size>1){
+        cin>>ya.ss;
+        forn(i,0,size-2) {
+            int x; cin>>x;
         }
     }
-    cout<<res<<endl;
+    return ya;
+}
+
+
+void solve() {
+    int n; cin>>n;
+    vector<vi> arr(n+1);
+    int start=1,c=0;
+    forn(i,1,n+1){
+        start++;
+        int l=start,r=1e9,end=start-1,mid;
+        while(l<=r){
+            mid=(l+r)/2;
+            pii ya=ask(mid);
+            if(ya.f==i) {
+                end=mid;
+                l=mid+1;
+            }
+            else r=mid-1;
+        }
+        while(start<=end){
+            pii ya=ask(start);
+            int last=ya.ss;
+            arr[ya.f].pb(ya.ss);
+            c++;
+            start++;
+            int l=start,r=end,mid,res=end+1;
+            while(l<=r){
+                mid=(l+r)/2;
+                ya=ask(mid);
+                if(ya.ss==last) l=mid+1;
+                else {
+                    res=mid; r=mid-1;
+                }
+            }
+            start=res;
+        }
+    }
+    cout<<"! "<<c<<endl;
+    forn(i,1,n+1){
+        for(auto it:arr[i]) cout<<i<<" "<<it<<endl;
+    }
 }
 
 int32_t main(){
@@ -90,7 +106,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

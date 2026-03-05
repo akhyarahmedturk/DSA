@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-02-08 14:48 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -40,45 +40,50 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-//NCR , NPR , binary_exp
-
-const int N = 1e3;
-int  fact[N + 10];
-int  inv_fact[N + 10];
-
-int binary_exp(int a, int b, int M){
-    int ans = 1;
-    while (b){
-        if (b & 1) ans = (ans * a) % M;
-        a = (a * a) % M;
-        b >>= 1;
-    }
-    return ans;
-}
-
-void precompute(){
-    fact[0] = inv_fact[0] = 1;
-    for (int i = 1;i < N;i++){
-        fact[i] = (i * fact[i - 1]) % mod;
-        inv_fact[i] = binary_exp(fact[i], mod - 2, mod) % mod;
-    }
-}
-
-int NCR(int n, int r){
-    if (r > n) return 0;
-    return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
-}
-
 void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
-        }
+    int n,m; cin>>n>>m;
+    vector<vi> arr(n,vi(m));
+    forn(i,0,n) input(arr[i],m);
+    vector<vi> dp1(n+2,vi(m+2,0));// 1,1 to x,y
+    vector<vi> dp2(n+2,vi(m+2,0));// x,y t0 n,m
+    
+    dp1[1][1]=arr[0][0];
+    dp2[n][m]=arr[n-1][m-1];
+    forn(i,2,n+1) dp1[i][1]=arr[i-1][0]+dp1[i-1][1];
+    forn(i,2,m+1) dp1[1][i]=arr[0][i-1]+dp1[1][i-1];
+    forr(i,n-1,1) dp2[i][m]=arr[i-1][m-1]+dp2[i+1][m];
+    forr(i,m-1,1) dp2[n][i]=arr[n-1][i-1]+dp2[n][i+1];
+
+    forr(i,n-1,1){
+        forr(j,m-1,1) dp2[i][j]=arr[i-1][j-1]+max(dp2[i+1][j],dp2[i][j+1]);
+    }
+    forn(i,2,n+1){
+        forn(j,2,m+1) dp1[i][j]=arr[i-1][j-1]+max(dp1[i-1][j],dp1[i][j-1]);
+    }
+
+
+    vector<vi> prefix_x(n+2,vi(m+2,-1LL*inf));
+    vector<vi> prefix_y(n+2,vi(m+2,-1LL*inf));
+    
+    forn(i,1,n+1){
+        forn(j,1,m+1) prefix_x[i][j]=max(dp1[i][j]+dp2[i][j]-arr[i-1][j-1],prefix_x[i][j-1]);
+    }
+
+    forn(i,1,m+1){
+        forn(j,1,n+1) prefix_y[j][i]=max(dp1[j][i]+dp2[j][i]-arr[j-1][i-1],prefix_y[j-1][i]);
+    }
+    int res=dp2[1][1];
+    int x=1,y=1;
+    while(x<=n && y<=m){
+        int ya=dp1[x][y]+dp2[x][y]-arr[x-1][y-1] -2*arr[x-1][y-1];
+        // cout<<x<<" "<<y<<" "<<prefix_x[x+1][y-1]<<endl;
+        if(x-1>=1 && y+1<=m) ya=max(ya,prefix_y[x-1][y+1]);
+        if(y-1>=1 && x+1<=n) ya=max(ya,prefix_x[x+1][y-1]);
+        res=min(res,ya);
+        if(x==n) y++;
+        else if(y==m) x++;
+        else if(dp2[x+1][y]>=dp2[x][y+1]) x++;
+        else y++;
     }
     cout<<res<<endl;
 }
@@ -90,7 +95,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }

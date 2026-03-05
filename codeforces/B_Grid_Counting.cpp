@@ -1,6 +1,6 @@
 /*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2026-01-12 20:37 (GMT+5)
+*    Created: 2026-03-04 14:57 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
@@ -69,18 +69,20 @@ int NCR(int n, int r){
     return (((fact[n] * inv_fact[n - r]) % mod) * inv_fact[r]) % mod;
 }
 
+
 void solve() {
-    int n,k; cin>>n>>k;
-    int ya=64- __builtin_clzll(n);
-    int res=0;
-    if(k<ya) res++; ya--;
-    for(int i=ya;i>=2;i--){
-        int rem=i-1;
-        for(int j=rem;j>=max(0LL,k-i+1);j--) {
-            res+=NCR(rem,j);
-        }
+    int n,m; cin>>n;
+    vi arr(n); input(arr,n);
+    int c=0;
+    forn(i,0,(n+1)/2) c+=arr[i];
+    forn(i,(n+1)/2,n) {
+        if(arr[i]) return 0;
     }
-    cout<<res<<endl;
+    if(c!=n) return 0;
+    int res=1,done=0;
+    forn(i,0,(mid+1)/2){
+        int avail=
+    }
 }
 
 int32_t main(){
@@ -90,7 +92,6 @@ cin.tie(NULL);
 // freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
-    precompute();
     while (t--) {
         solve();
     }
