@@ -620,3 +620,77 @@ struct Manacher {
         return p[l + r + 1] - 1 >= len;
     }
 };
+
+
+// AhoCorasick
+
+const int ALPHABET_SIZE = 26;
+
+struct AhoCorasick {
+    struct Node {
+        int children[ALPHABET_SIZE];
+        int fail = 0;
+        int count = 0; // Tracks patterns ending at this node
+
+        Node() {
+            memset(children, 0, sizeof(children));
+        }
+    };
+
+    vector<Node> trie;
+
+    AhoCorasick() {
+        trie.emplace_back();
+    }
+
+    void insert(const string& s) {
+        int u = 0;
+        for (char c : s) {
+            int v = c - 'a';
+            if (!trie[u].children[v]) {
+                trie[u].children[v] = trie.size();
+                trie.emplace_back();
+            }
+            u = trie[u].children[v];
+        }
+        trie[u].count++;
+    }
+
+    void build() {
+        queue<int> q;
+        forn(i, 0, ALPHABET_SIZE) {
+            if (trie[0].children[i]) {
+                q.push(trie[0].children[i]);
+            }
+        }
+
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+
+            forn(i, 0, ALPHABET_SIZE) {
+                int &v = trie[u].children[i];
+                int fail_node = trie[trie[u].fail].children[i];
+
+                if (v) {
+                    trie[v].fail = fail_node;
+                    // Propagate information along the failure path
+                    trie[v].count += trie[fail_node].count;
+                    q.push(v);
+                } else {
+                    v = fail_node; // Transitions to the next best state
+                }
+            }
+        }
+    }
+
+    int query(const string& text) {
+        int u = 0;
+        int total_matches = 0;
+        for (char c : text) {
+            u = trie[u].children[c - 'a'];
+            total_matches += trie[u].count;
+        }
+        return total_matches;
+    }
+};
