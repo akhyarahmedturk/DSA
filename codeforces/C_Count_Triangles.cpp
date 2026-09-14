@@ -43,18 +43,13 @@ const int inf = 1e17 + 1;
 void solve() {
     int a,b,c,d; cin>>a>>b>>c>>d;
     //a1+a2>a3
-    int res=0;
-    forn(i,a,b+1){
-        int start=max(b,c-i+1);
-        int t=min(d-c+1,c-start+1);
-        int v=(min(start+i-1,d)-c+1);
-        if(t<=0 ) continue;
-        cout<<start<<" "<<t<<" "<<v<<endl;
-        res+=((t+v)*(t+v-1))/2- (v*(v-1))/2;
-        if(t<c-start+1){
-            int mx=d-c+1-t;
-            res+=(c-b+1 - t)*mx; 
-        }
+    int res=0,cnt=1;
+    forn(i,c+1,d*2+10){
+        int aa=(i-c),cc=c;
+        if(aa<a) cc=(i-a) , aa=a;
+        int ya=max(0LL,min(b-aa+1,cc-b+1));
+        res+=ya*cnt;
+        if(i<=d) cnt++;
     }
     cout<<res<<endl;
 }

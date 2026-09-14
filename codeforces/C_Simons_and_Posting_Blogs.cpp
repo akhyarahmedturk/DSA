@@ -41,43 +41,35 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve(){
-    int n; cin >> n;
-    set<vi> st;
-    forn(i, 0, n){
-        int m; cin >> m;
-        vi ya(m); input(ya, m);
-        vi ya2;
-        set<int> st2;
-        forr(i, m - 1, 0){
-            if (st2.find(ya[i]) == st2.end()){
-                st2.insert(ya[i]); ya2.pb(ya[i]);
-            }
+    int n; cin>>n;
+    set<vi> arr;
+    forn(i,0,n){
+        int m; cin>>m;
+        vi mp(1e6+10,0);
+        vi ya(m); input(ya,m); reverse(all(ya));
+        vi ya1;
+        for(auto it:ya){
+            if(!mp[it]) ya1.pb(it); mp[it]=1;
         }
-        st.insert(ya2);
+        arr.insert(ya1);
     }
-    vi mp(1e6 + 10, 0);
+    vi mp(1e6+10,0);
     vi res;
-    while (!st.empty()){
-        vi ya = *st.begin(); st.erase(st.begin());
-        set<vi> st2;
-        for (auto it : ya){
-            if (!mp[it]) res.pb(it);
-            mp[it] = 1;
-        }
-        for(auto it:st){
+    while(arr.size()){
+        auto ya1=*arr.begin();
+        for(auto it:ya1) res.pb(it) , mp[it]=1;
+        set<vi> arr2;
+        for(auto it:arr){
             vi ya;
-            reverse(all(it));
-            for(auto itt:it){
+            for(auto itt:it) {
                 if(!mp[itt]) ya.pb(itt);
             }
-            if(ya.size()){
-                reverse(all(ya)); st2.insert(ya);
-            }
+            if(ya.size()) arr2.insert(ya);
         }
-        swap(st,st2);
+        swap(arr,arr2);
     }
-    for (auto it : res) cout << it << " ";
-    cout << endl;
+    for(auto it:res) cout<<it<<" ";
+    cout<<nl;
 }
 
 int32_t main(){

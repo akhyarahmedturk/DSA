@@ -1,10 +1,10 @@
-/*
+/*   Bismillah
 *    Author: Akhyar Ahmed Turk
-*    Created: 2025-11-12 20:00 (GMT+5)
+*    Created: 2026-08-30 11:58 (GMT+5)
 
 *    brain["Motivation"].insert("Ya to win hy ya learn");
 
-*    Those who can’t remember the past are condemned to repeat it.
+*    Those who can't remember the past are condemned to repeat it.
 *                                                 -Dynamic Programming.
 */
 #include <bits/stdc++.h>
@@ -26,94 +26,55 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 #define f first
 #define ss second
 #define vi vector<int>
+#define vb vector<bool>
+#define vvi vector<vi>
 #define all(a) a.begin(), a.end()
 #define allr(a) a.rbegin(), a.rend()
 #define mod 1000000007
 #define mod2 998244353
 const int inf = 1e17 + 1;
 #define INT_MAX LLONG_MAX
+#define nl "\n"
 
 #define forn(i, a, b) for (int i = a; i < b; i++)
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void solve() {
-    int n; cin>>n;
-    vi ya(n+1,1);
-    int rem=n;
-    set<int> res;
-    forn(i,1,n+1) {res.insert(i);}
-    for(int i=1;res.size()>1;i*=2LL){
-        int c=0;
-        vi ans(n+1,0);
-        forn(j,1,n){
-            if(ya[j]){
-                cout<<"? "<<j<<" "<<i<<endl;
-                int x; cin>>x;
-                ans[j]=x;
-                if(!x) c++;
-            }
-        }
-        set<int> st2;
-        if(rem&1){
-            if(c==rem/2+1){
-                rem=rem/2;
-                ya=ans;
-                for(auto it:res){
-                    if(it&i) st2.insert(it);
-                } 
-            }
-            else{
-                rem=rem/2+1;
-                forn(i,1,n){
-                    if(ya[i]) ya[i]=(!ans[i]);
-                }
-                for(auto it:res){
-                    if(!(it&i)) st2.insert(it);
-                }  
-            }
-        }
-        else{
-            if(c==rem/2){
-                rem=rem/2;
-                ya=ans; 
-                for(auto it:res){
-                    if((it&i)) st2.insert(it);
-                } 
-            }
-            else{
-                rem=rem/2;
-                forn(i,1,n){
-                    if(ya[i]) ya[i]=(!ans[i]);
-                } 
-                for(auto it:res){
-                    if(!(it&i)) st2.insert(it);
-                } 
-            }
-        }
-        for(auto it:res)cout<<it<<" ";
-        cout<<endl;
-        cout<<rem<<endl;
-        swap(res,st2);
-    }
-    cout<<"! "<<*res.begin()<<endl;
+int n;
+
+int ask(int u,int v,int d){
+    cout<<"? "<<u<<" "<<v<<" "<<d<<endl;
+    cin>>u;
+    return u;
 }
-// 1 2 3 4 5 6 7 8 9 10 11 12
-// n-1=7 querries-> know parity of every including nth remaining(n+1, 13)
-// it can be 2,4,6,8,10,12
-// &2=2 waly kitny? 3
-//so, divide ho rahy by 2??
 
-// 1 2 3 4 5 6 7 8 9
-// 1 3 5 7 9
-// 1 5 9
+pii ya(int start,int l){
+    int farthest=1,mid,mx=l-1;
+    for(int i=1;i<=n;i++){
+        if(i==start) continue;
+        int r=n-1,mid;
+        while(l<=r && mx<r){
+            mid=(l+r)/2;
+            if(ask(start,i,mid)) {l=mid+1 , mx=mid , farthest=i; }
+            else r=mid-1;
+        }
+    }
+    return {farthest,mx};
+}
 
-//1 3 4 5 6 7 2
-//6 4 ,2
-//
+void solve() {
+    cin>>n;
+    if(n==2) { cout<<"! 1 2 1"<<endl; return;}
+    pii res1=ya(1,1);
+    pii res2=ya(res1.f,res1.ss);
+    cout<<"! "<<res1.f<<" "<<res2.f<<" "<<res2.ss<<endl;
+}
+
 int32_t main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
+// freopen("input.txt", "r", stdin);
+// freopen("output.txt", "w", stdout);
     int t=1;
     cin >> t;
     while (t--) {

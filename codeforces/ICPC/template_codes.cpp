@@ -599,9 +599,7 @@ struct Manacher{
     string t;
     Manacher(const string& s){
         t = "#";
-        for (char c : s){
-            t += c, t += '#';
-        }
+        for (char c : s){  t += c, t += '#'; }
         int n = (int)t.size();
         p.assign(n, 1);
         for (int i = 0, l = 0, r = 0; i < n; i++){
@@ -609,7 +607,7 @@ struct Manacher{
             while (i - p[i] >= 0 && i + p[i] < n && t[i - p[i]] == t[i + p[i]]) p[i]++;
             if (i + p[i] - 1 > r){
                 l = i - p[i] + 1,
-                    r = i + p[i] - 1;
+                r = i + p[i] - 1;
             }
         }
     }
@@ -661,22 +659,14 @@ vi getEulerCycle(int n, int m, vector<pii> &edges){
         int u = st.top();
         while (!adj[u].empty() && used[adj[u].back().second])
             adj[u].pop_back();
-        if (adj[u].empty()){
-            euler.pb(u);
-            st.pop();
-        }
+        if (adj[u].empty()){ euler.pb(u); st.pop();  }
         else{
             auto [v, id] = adj[u].back();
             adj[u].pop_back();
-
-            if (!used[id]){
-                used[id] = true;
-                st.push(v);
-            }
+            if (!used[id]){  used[id] = true;  st.push(v); }
         }
     }
-    if ((int)euler.size() != m + 1)
-        return {}; // Not connected
+    if ((int)euler.size() != m + 1) return {}; // Not connected
     reverse(euler.begin(), euler.end());
     return euler;
 }
@@ -691,18 +681,10 @@ struct AhoCorasick {
         int children[ALPHABET_SIZE];
         int fail = 0;
         int count = 0; // Tracks patterns ending at this node
-
-        Node() {
-            memset(children, 0, sizeof(children));
-        }
+        Node() {  memset(children, 0, sizeof(children)); }
     };
-
     vector<Node> trie;
-
-    AhoCorasick() {
-        trie.emplace_back();
-    }
-
+    AhoCorasick() { trie.emplace_back(); }
     void insert(const string& s) {
         int u = 0;
         for (char c : s) {
@@ -715,7 +697,6 @@ struct AhoCorasick {
         }
         trie[u].count++;
     }
-
     void build() {
         queue<int> q;
         forn(i, 0, ALPHABET_SIZE) {
@@ -723,27 +704,21 @@ struct AhoCorasick {
                 q.push(trie[0].children[i]);
             }
         }
-
         while (!q.empty()) {
             int u = q.front();
             q.pop();
-
             forn(i, 0, ALPHABET_SIZE) {
                 int &v = trie[u].children[i];
                 int fail_node = trie[trie[u].fail].children[i];
-
                 if (v) {
                     trie[v].fail = fail_node;
                     // Propagate information along the failure path
                     trie[v].count += trie[fail_node].count;
                     q.push(v);
-                } else {
-                    v = fail_node; // Transitions to the next best state
-                }
+                } else {  v = fail_node; /* Transitions to the next best state*/ }
             }
         }
     }
-
     int query(const string& text) {
         int u = 0;
         int total_matches = 0;
@@ -754,3 +729,17 @@ struct AhoCorasick {
         return total_matches;
     }
 };
+
+
+//euler tour dfs ( in out based , use with ST)
+
+void dfs(int idx,int p,vector<vi> &graph,vi &arr,vector<pii> &order,int &curr,vi &arr2){
+    order[idx].f=curr;
+    arr2.pb(arr[idx-1]); curr++;
+    for(auto it:graph[idx]){
+        if(it==p) continue;
+        dfs(it,idx,graph,arr,order,curr,arr2);
+    }
+    order[idx].ss=curr;
+    arr2.pb(arr[idx-1]*-1LL); curr++;
+}

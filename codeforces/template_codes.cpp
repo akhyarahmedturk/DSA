@@ -355,7 +355,7 @@ struct BIT{
 
 // bridges in graph
 
-se res;
+vector<pii> res;
 vector<set<int>> graph;
 int DFS(int idx, vi & vis, vi & count){
     vis[idx] = 1;

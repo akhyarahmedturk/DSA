@@ -42,19 +42,29 @@ const int inf = 1e17 + 1;
 
 void solve() {
     int n,m; cin>>n>>m;
-    vector<vi> graph(n+1,vi(m+1,inf));
+    vector<map<int,int>> graph(n+1);
     forn(i,0,m){
         int a,b,v; cin>>a>>b>>v;
-        graph[a][b]=min(graph[a][b],v);
-        graph[b][a]=min(graph[b][a],v);
+        if(graph[a].find(b)==graph[a].end()) graph[a][b]=v , graph[b][a]=v;
+        else graph[a][b]=min(graph[a][b],v) , graph[b][a]=min(graph[b][a],v);
     }
-    vi arr(n+1);
-    forn(i,1,n+1) cin>>arr[i];
-    set<pii> st; st.insert({arr[1],0});
-    vector<vector<pii>> vis(n+1,vector<pii>(m+1,{inf,inf}));
-    while(!st.empty()){
-        pii ya=st.begin(); st.erase(st.begin());
+    vi bikes(n+1);
+    forn(i,0,n) cin>>bikes[i+1];
+    vector<vi> dp(n+1,vi(1000+1,inf));
+    queue<array<int,3>> q; // res,bike,index
+    q.push({0,bikes[1],1});
+    dp[1][bikes[1]]=0;
+    while(!q.empty()){
+        auto[res,bike,idx]=q.front(); q.pop();
+        bike=min(bike,bikes[idx]);
+        if(dp[idx][bike]<res) continue;
+        for(auto it:graph[idx]){
+            if(dp[it.f][bike]>res+bike*it.ss) dp[it.f][bike]=res+bike*it.ss , q.push({res+bike*it.ss,bike,it.f});
+        }
+
     }
+    forn(i,1,1000+1) dp[n][0]=min(dp[n][0],dp[n][i]);
+    cout<<dp[n][0]<<endl;
 }
 
 int32_t main(){

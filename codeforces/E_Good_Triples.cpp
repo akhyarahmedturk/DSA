@@ -41,9 +41,23 @@ const int inf = 1e17 + 1;
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
 void solve() {
-    int n; cin>>n;
+
     
+    for(){
+
+        for(){
+            for(){
+
+            }
+        }
+    }
 }
+// 63
+
+// 50
+
+// _ _ _ _
+
 
 int32_t main(){
 ios_base::sync_with_stdio(false);
