@@ -34,9 +34,36 @@ int NPR(int n, int r){
 
 //Segment Tree
 
+/* ===== NORMAL -> LAZY CHECKLIST =====
+ 1. Add  vector<Update> lazyTree  (0 = no pending update, so 0 can't be a real update value)
+ 2. Full-cover case of range update: apply to own value, then lazyTree[i].propagate(u1)
+ 3. Before going down (update/query, partial overlap): pushdown(i,l,r)
+ 4. pushdown applies the tag to both CHILDREN's values, then propagates the tag to them, then clears own tag
+
+ ===== WHAT TO CHANGE PER PROBLEM (only Node::merge and Update::apply/propagate) =====
+ Node::merge (identity Node() = 0 for all three; for max use -inf, min use +inf)
+    sum: val = left.val + right.val;
+    xor: val = left.val ^ right.val;
+    OR : val = left.val | right.val;
+
+ Update::apply(node,l,r)   (len = r-l+1)
+    range assign, sum : node.val = val * len;
+    range add,    sum : node.val += val * len;
+    range xor,    xor : if(len & 1) node.val ^= val;   // even length cancels out
+    range assign, OR  : node.val = (1LL<<val);         // or node.val = val if val is already a mask
+    range OR,     OR  : node.val |= val;
+
+ Update::propagate(newU)   (how a new tag combines with the old tag; 0 = identity)
+    assign : val = newU.val;     // newest overwrites
+    add    : val += newU.val;
+    xor    : val ^= newU.val;
+    OR     : val |= newU.val;
+ NOTE: for assign, 0 can't be a real value; if it can, use a separate bool has / sentinel -1.
+*/
+
 struct Node{
     int val;
-    Node(int val = 0) : val(val){ }
+    Node(int val = 0) : val(val){}
     void merge(Node& left, Node& right){
         val = left.val + right.val;
     }
@@ -44,7 +71,7 @@ struct Node{
 
 struct Update{
     int val;
-    Update(int val = 0) : val(val){ }
+    Update(int val = 0) : val(val){}
     void apply(Node& node, int l, int r){
         node.val += val * (r - l + 1ll); // Currently lazyUpdate is via updating val NOT replacing.
     }
@@ -74,12 +101,27 @@ private:
         segTree[node].merge(segTree[2 * node + 1], segTree[2 * node + 2]);
     }
 
+    // CHANGED: pushdown applies the tag to the CHILDREN's values right away,
+    // so children are never stale when we merge.
+    void pushdown(int i, int l, int r){
+        if (l == r) return;                          // leaf has no children
+        if (lazyTree[i].val){                        // 0 -> no need to update
+            int mid = l + (r - l) / 2;
+            Update& u = lazyTree[i];
+            u.apply(segTree[2 * i + 1], l, mid);     // update left child's value
+            u.apply(segTree[2 * i + 2], mid + 1, r); // update right child's value
+            lazyTree[2 * i + 1].propagate(u);        // leave tag for grandchildren
+            lazyTree[2 * i + 2].propagate(u);
+            lazyTree[i] = Update();                  // clear
+        }
+    }
+
     void updateTree(int i, int l, int r, int& idx, Update& u1){
-        pushdown(i, l, r);
-        if (l == r){
+        if (l == r){                                 // CHANGED: no pushdown at leaf
             u1.modify(segTree[i]);
             return;
         }
+        pushdown(i, l, r);                           // push before going down
 
         int mid = l + (r - l) / 2;
         if (idx <= mid)
@@ -90,31 +132,17 @@ private:
         segTree[i].merge(segTree[2 * i + 1], segTree[2 * i + 2]);
     }
 
-    void pushdown(int i, int l, int r){
-        if (lazyTree[i].val){
-            lazyTree[i].apply(segTree[i], l, r);
-            if (l != r){
-                lazyTree[2 * i + 1].propagate(lazyTree[i]);
-                lazyTree[2 * i + 2].propagate(lazyTree[i]);
-            }
-            lazyTree[i] = Update();
-        }
-    }
-
     void lazyUpdateRange(int i, int l, int r, int start, int end, Update& u1){
         if (r < start || l > end)
             return;
 
-        pushdown(i, l, r);
         if (start <= l && r <= end){
-            u1.apply(segTree[i], l, r);
-            if (l != r){
-                lazyTree[2 * i + 1].propagate(u1);
-                lazyTree[2 * i + 2].propagate(u1);
-            }
+            u1.apply(segTree[i], l, r);              // fix own value now
+            if (l != r) lazyTree[i].propagate(u1);   // CHANGED: tag lives on THIS node
             return;
         }
 
+        pushdown(i, l, r);                           // CHANGED: pushdown only when going down
         int mid = l + (r - l) / 2;
         lazyUpdateRange(2 * i + 1, l, mid, start, end, u1);
         lazyUpdateRange(2 * i + 2, mid + 1, r, start, end, u1);
@@ -126,10 +154,10 @@ private:
             // return Node( numeric_limits<int>::lowest() );
             return Node();
 
-        pushdown(i, l, r);
         if (start <= l && r <= end)
             return segTree[i];
 
+        pushdown(i, l, r);                           // CHANGED: pushdown only when going down
         int mid = l + (r - l) / 2;
         Node left = query(2 * i + 1, l, mid, start, end);
         Node right = query(2 * i + 2, mid + 1, r, start, end);
@@ -140,7 +168,6 @@ private:
 
 public:
     SegmentTree(vi& nums) : n(nums.size()), segTree(4 * n, 0), lazyTree(4 * n, 0){
-        // segTree.resize( 2 * n - 1 ) ;
         fill(all(segTree), Node());
         fill(all(lazyTree), Update());
         buildTree(0, 0, n - 1, nums);
@@ -355,7 +382,7 @@ struct BIT{
 
 // bridges in graph
 
-se res;
+vector<pii> res;
 vector<set<int>> graph;
 int DFS(int idx, vi & vis, vi & count){
     vis[idx] = 1;
@@ -547,7 +574,7 @@ class SCC{
     }
     void build_condened_graph(vector<pii>& edges){
         int k = scc.size();
-        dag.assign(k, {});
+        dag.assign(k, { });
         for (auto [u, v] : edges){
             int cu = component_id[u];
             int cv = component_id[v];
@@ -561,8 +588,8 @@ public:
     vector<vi> dag;
     vector<vi> g, rg, scc;
     SCC(int n, vector<pii>& edges){
-        g.assign(n, {});
-        rg.assign(n, {});
+        g.assign(n, { });
+        rg.assign(n, { });
         for (auto& e : edges){
             int u = e.first;
             int v = e.second;
@@ -599,7 +626,7 @@ struct Manacher{
     string t;
     Manacher(const string& s){
         t = "#";
-        for (char c : s){  t += c, t += '#'; }
+        for (char c : s){ t += c, t += '#'; }
         int n = (int)t.size();
         p.assign(n, 1);
         for (int i = 0, l = 0, r = 0; i < n; i++){
@@ -607,7 +634,7 @@ struct Manacher{
             while (i - p[i] >= 0 && i + p[i] < n && t[i - p[i]] == t[i + p[i]]) p[i]++;
             if (i + p[i] - 1 > r){
                 l = i - p[i] + 1,
-                r = i + p[i] - 1;
+                    r = i + p[i] - 1;
             }
         }
     }
@@ -646,12 +673,12 @@ vi getEulerCycle(int n, int m, vector<pii> &edges){
     // Check even degree condition
     for (int i = 1; i <= n; i++){
         if (degree[i] % 2 != 0)
-            return {};  // No Euler cycle
+            return { };  // No Euler cycle
     }
     int start = 1;
     // Find starting node (with degree > 0)
     while (start <= n && adj[start].empty()) start++;
-    if (start > n) return {}; // no edges
+    if (start > n) return { }; // no edges
     vi euler;
     stack<int> st;
     st.push(start);
@@ -659,14 +686,14 @@ vi getEulerCycle(int n, int m, vector<pii> &edges){
         int u = st.top();
         while (!adj[u].empty() && used[adj[u].back().second])
             adj[u].pop_back();
-        if (adj[u].empty()){ euler.pb(u); st.pop();  }
+        if (adj[u].empty()){ euler.pb(u); st.pop(); }
         else{
             auto [v, id] = adj[u].back();
             adj[u].pop_back();
-            if (!used[id]){  used[id] = true;  st.push(v); }
+            if (!used[id]){ used[id] = true;  st.push(v); }
         }
     }
-    if ((int)euler.size() != m + 1) return {}; // Not connected
+    if ((int)euler.size() != m + 1) return { }; // Not connected
     reverse(euler.begin(), euler.end());
     return euler;
 }
@@ -676,20 +703,20 @@ vi getEulerCycle(int n, int m, vector<pii> &edges){
 
 const int ALPHABET_SIZE = 26;
 
-struct AhoCorasick {
-    struct Node {
+struct AhoCorasick{
+    struct Node{
         int children[ALPHABET_SIZE];
         int fail = 0;
         int count = 0; // Tracks patterns ending at this node
-        Node() {  memset(children, 0, sizeof(children)); }
+        Node(){ memset(children, 0, sizeof(children)); }
     };
     vector<Node> trie;
-    AhoCorasick() { trie.emplace_back(); }
-    void insert(const string& s) {
+    AhoCorasick(){ trie.emplace_back(); }
+    void insert(const string& s){
         int u = 0;
-        for (char c : s) {
+        for (char c : s){
             int v = c - 'a';
-            if (!trie[u].children[v]) {
+            if (!trie[u].children[v]){
                 trie[u].children[v] = trie.size();
                 trie.emplace_back();
             }
@@ -697,32 +724,33 @@ struct AhoCorasick {
         }
         trie[u].count++;
     }
-    void build() {
+    void build(){
         queue<int> q;
-        forn(i, 0, ALPHABET_SIZE) {
-            if (trie[0].children[i]) {
+        forn(i, 0, ALPHABET_SIZE){
+            if (trie[0].children[i]){
                 q.push(trie[0].children[i]);
             }
         }
-        while (!q.empty()) {
+        while (!q.empty()){
             int u = q.front();
             q.pop();
-            forn(i, 0, ALPHABET_SIZE) {
-                int &v = trie[u].children[i];
+            forn(i, 0, ALPHABET_SIZE){
+                int& v = trie[u].children[i];
                 int fail_node = trie[trie[u].fail].children[i];
-                if (v) {
+                if (v){
                     trie[v].fail = fail_node;
                     // Propagate information along the failure path
                     trie[v].count += trie[fail_node].count;
                     q.push(v);
-                } else {  v = fail_node; /* Transitions to the next best state*/ }
+                }
+                else{ v = fail_node; /* Transitions to the next best state*/ }
             }
         }
     }
-    int query(const string& text) {
+    int query(const string& text){
         int u = 0;
         int total_matches = 0;
-        for (char c : text) {
+        for (char c : text){
             u = trie[u].children[c - 'a'];
             total_matches += trie[u].count;
         }
@@ -733,13 +761,161 @@ struct AhoCorasick {
 
 //euler tour dfs ( in out based , use with ST)
 
-void dfs(int idx,int p,vector<vi> &graph,vi &arr,vector<pii> &order,int &curr,vi &arr2){
-    order[idx].f=curr;
-    arr2.pb(arr[idx-1]); curr++;
-    for(auto it:graph[idx]){
-        if(it==p) continue;
-        dfs(it,idx,graph,arr,order,curr,arr2);
+void dfs(int idx, int p, vector<vi> &graph, vi & arr, vector<pii> &order, int& curr, vi & arr2){
+    order[idx].f = curr;
+    arr2.pb(arr[idx - 1]); curr++;
+    for (auto it : graph[idx]){
+        if (it == p) continue;
+        dfs(it, idx, graph, arr, order, curr, arr2);
     }
-    order[idx].ss=curr;
-    arr2.pb(arr[idx-1]*-1LL); curr++;
+    order[idx].ss = curr;
+    arr2.pb(arr[idx - 1] * -1LL); curr++;
+}
+
+// Dynamic Median - Make all elements equal (dynamic)
+
+class DynamicMedian{
+public:
+    int r1 = 0, r2 = 0, size = 0;
+    multiset<int> st1, st2;
+
+    // st1 ka maximum element reference hai, r1 total difference maintain karta hai
+    void add1(int x){
+        if (st1.empty() || x <= *st1.rbegin()){
+            if (!st1.empty()) r1 += (*st1.rbegin() - x);
+            st1.insert(x);
+        }
+        else{
+            r1 += (x - *st1.rbegin()) * (int)st1.size();
+            st1.insert(x);
+        }
+    }
+
+    // st2 ka minimum element reference hai, r2 total difference maintain karta hai
+    void add2(int x){
+        if (st2.empty() || x >= *st2.begin()){
+            st2.insert(x);
+            r2 += (x - *st2.begin());
+        }
+        else{
+            r2 += (*st2.begin() - x) * (int)st2.size();
+            st2.insert(x);
+        }
+    }
+
+    // st1 se element remove karte waqt r1 update karna
+    void remove1(int x){
+        auto it = st1.find(x);
+        int end = *st1.rbegin();
+
+        if (x == end && st1.size() > 1){
+            st1.erase(it);
+            int end2 = *st1.rbegin();
+            if (end2 != x) r1 -= (x - end2) * (int)st1.size();
+        }
+        else{
+            r1 -= (end - x);
+            st1.erase(it);
+        }
+    }
+
+    // st2 se element remove karte waqt r2 update karna
+    void remove2(int x){
+        auto it = st2.find(x);
+        int start = *st2.begin();
+
+        if (x == start && st2.size() > 1){
+            st2.erase(it);
+            int start2 = *st2.begin();
+            if (start2 != x) r2 -= (start2 - x) * (int)st2.size();
+        }
+        else{
+            r2 -= (x - start);
+            st2.erase(it);
+        }
+    }
+
+    // Element insert karna aur dono halves ka balance maintain karna
+    void add(int x){
+        size++;
+
+        if (size == 1 || x <= *st1.rbegin()){
+            add1(x);
+            if (st1.size() > (size + 1) / 2){
+                int v = *st1.rbegin();
+                remove1(v);
+                add2(v);
+            }
+        }
+        else{
+            add2(x);
+            if (st2.size() > st1.size()){
+                int v = *st2.begin();
+                remove2(v);
+                add1(v);
+            }
+        }
+    }
+
+    // Element delete karna, phir dono halves ko balance karna
+    // Element exist na kare toh false return hoga
+    bool remove(int x){
+        if (size == 0) return false;
+
+        if (st2.find(x) != st2.end()) remove2(x);
+        else if (st1.find(x) != st1.end()) remove1(x);
+        else return false;
+
+        size--;
+
+        if (st1.size() > (size + 1) / 2){
+            int v = *st1.rbegin();
+            remove1(v);
+            add2(v);
+        }
+        else if (st2.size() > st1.size()){
+            int v = *st2.begin();
+            remove2(v);
+            add1(v);
+        }
+
+        return true;
+    }
+
+    // Lower median return karega
+    int get_median(){
+        if (size == 0) return 0;
+        return *st1.rbegin();
+    }
+
+    // Sab elements ko equal banane ki minimum cost (sum of absolute differences)
+    int get_min(){
+        if (size <= 1) return 0;
+        return r1 + r2 + (*st2.begin() - *st1.rbegin()) * (int)st2.size();
+    }
+};
+
+
+
+// DP on trees
+// 2 dfs function
+// 0-based (just change arr[idx-1] or arr based on 1-base)
+
+void dfs1(int idx, int p, vector<vi> &graph, vector<pii> &dp1, vi & arr){
+    dp1[idx] = { 0,arr[idx] };// sum, count/dist_sum
+    for (auto it : graph[idx]){
+        if (it == p) continue;
+        dfs1(it, idx, graph, dp1, arr);
+        dp1[idx].f += dp1[it].f + dp1[it].ss;
+        dp1[idx].ss += dp1[it].ss;
+    }
+}
+void dfs2(int idx, int p, int sum, int count, vector<vi> &graph, vector<pii> &dp1, vector<pii> &dp2){
+    dp2[idx] = { sum + count + dp1[idx].f,count + dp1[idx].ss };// sum, count/dist_sum
+    for (auto it : graph[idx]){
+        if (it == p) continue;
+        sum = dp2[idx].f - dp1[it].f - dp1[it].ss;
+        count = dp2[idx].ss - dp1[it].ss;
+        dfs2(it, idx, sum, count, graph, dp1, dp2);
+    }
 }
