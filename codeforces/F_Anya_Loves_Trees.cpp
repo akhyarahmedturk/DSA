@@ -40,6 +40,15 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
+pii dfs(int idx,int p,vi &arr,vector<vi> &graph){
+    if(graph[idx].size()==1) return {arr[idx],arr[idx]};
+    vector<pii> ya;
+    for(auto it:graph[idx]){
+        ya.pb(dfs(it,idx,arr,graph));
+    }
+    int mm=graph[idx].size()
+}
+
 void solve() {
     int n; cin>>n;
     vector<vi> graph(n+1);
@@ -48,47 +57,8 @@ void solve() {
         graph[x].pb(i+2);
     }
     vi arr(n); input(arr,n);
-    deque<int> q; q.push_back(1);
-    while(!q.empty()){
-        int size=q.size();
-        vector<vi> ya;
-        while(size--){
-            ya.pb({});
-            int idx=q.front(); q.pop_front();
-            for(auto it:graph[idx]) {
-                ya.back().pb(arr[it-1]) , q.push_back(it);
-            }
-            if(ya.back().size()==0) ya.pop_back();
-            else{
-                vi yaa=ya.back(); sort(all(yaa));
-                if(yaa!=ya.back()){
-                    bool a=true;
-                    forn(i,1,ya.back().size()-1){
-                        if(ya.back()[i]<ya.back()[i-1]) a=false;
-                    }
-                    if(!a || ya.back()[0]<ya.back().back()) { cout<<"NO"<<endl; return;}
-                }
-                sort(all(ya.back()));
-            }
-        }
-        if(ya.size()==0) break;
-        if(ya.size()==1) continue;
-        bool a=true;
-        forn(i,1,ya.size()){
-            if(ya[i-1].back()>ya[i][0]) { a=false; break; }
-        }
-        if(a) continue;
-        a=true;
-        forn(i,2,ya.size()){
-            if(ya[i-1].back()>ya[i][0]) { a=false; break; }
-        }
-        if(a && ya[0][0]<ya.back().back()) {
-            cout<<"NO"<<endl; return;
-        }
-        q.push_front(q.back());
-        q.pop_back();
-    }
-    cout<<"YES"<<endl;
+    pii ya=dfs();
+    yesno(ya.f!=-1);
 }
 
 int32_t main(){

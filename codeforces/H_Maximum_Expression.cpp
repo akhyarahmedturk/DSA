@@ -1,0 +1,104 @@
+/*   Bismillah
+*    Author: Akhyar Ahmed Turk
+*    Created: 2026-11-13 17:34 (GMT+5)
+
+*    brain["Motivation"].insert("Ya to win hy ya learn");
+
+*    Those who can't remember the past are condemned to repeat it.
+*                                                 -Dynamic Programming.
+*/
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+// use when u need indexing in sets like (when you need lower upper bound while frequently updating set) 
+// idx.order_of_key(value) for nums<value idx.order_of_key(value+1) for nums<=value
+// idx.find_by_order(n); to get the nth value by order
+#define int long long
+#define ld long double
+#define yesno(b) cout << ((b) ? "YES" : "NO") << "\n";
+#define pii pair<int, int>
+#define pb push_back
+#define f first
+#define ss second
+#define vi vector<int>
+#define vb vector<bool>
+#define vvi vector<vi>
+#define all(a) a.begin(), a.end()
+#define allr(a) a.rbegin(), a.rend()
+#define mod 1000000007
+#define mod2 998244353
+const int inf = 1e17 + 1;
+#define INT_MAX LLONG_MAX
+#define nl "\n"
+
+#define forn(i, a, b) for (int i = a; i < b; i++)
+#define forr(i, a, b) for (int i = a; i >= b; i--)
+#define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
+
+int dfs(int x,int y,int op,vi &arr,string &s,vector<vector<vi>> &dp){
+    if(x==y) return arr[x];
+    if(dp[x][y][op]!=inf) return dp[x][y][op];
+    if(op==0){//min
+        dp[x][y][op]=inf;
+        forn(i,x,y){
+            if(s[i]=='+'){
+                dp[x][y][op]=min(dp[x][y][op],dfs(x,i,0,arr,s,dp)+dfs(i+1,y,1,arr,s,dp));
+                dp[x][y][op]=min(dp[x][y][op],dfs(x,i,1,arr,s,dp)+dfs(i+1,y,0,arr,s,dp));
+                dp[x][y][op]=min(dp[x][y][op],dfs(x,i,0,arr,s,dp)+dfs(i+1,y,0,arr,s,dp));
+                dp[x][y][op]=min(dp[x][y][op],dfs(x,i,1,arr,s,dp)+dfs(i+1,y,1,arr,s,dp));
+            }
+            else{
+                dp[x][y][op]=min(dp[x][y][op],dfs(x,i,0,arr,s,dp)*dfs(i+1,y,1,arr,s,dp));
+                dp[x][y][op]=min(dp[x][y][op],dfs(x,i,1,arr,s,dp)*dfs(i+1,y,0,arr,s,dp));
+                dp[x][y][op]=min(dp[x][y][op],dfs(x,i,0,arr,s,dp)*dfs(i+1,y,0,arr,s,dp));
+                dp[x][y][op]=min(dp[x][y][op],dfs(x,i,1,arr,s,dp)*dfs(i+1,y,1,arr,s,dp));
+            }
+        }
+    }
+    else{//max
+        dp[x][y][op]=-1LL*inf;
+        forn(i,x,y){
+            if(s[i]=='+'){
+                dp[x][y][op]=max(dp[x][y][op],dfs(x,i,0,arr,s,dp)+dfs(i+1,y,1,arr,s,dp));
+                dp[x][y][op]=max(dp[x][y][op],dfs(x,i,1,arr,s,dp)+dfs(i+1,y,0,arr,s,dp));
+                dp[x][y][op]=max(dp[x][y][op],dfs(x,i,0,arr,s,dp)+dfs(i+1,y,0,arr,s,dp));
+                dp[x][y][op]=max(dp[x][y][op],dfs(x,i,1,arr,s,dp)+dfs(i+1,y,1,arr,s,dp));
+            }
+            else{
+                dp[x][y][op]=max(dp[x][y][op],dfs(x,i,0,arr,s,dp)*dfs(i+1,y,1,arr,s,dp));
+                dp[x][y][op]=max(dp[x][y][op],dfs(x,i,1,arr,s,dp)*dfs(i+1,y,0,arr,s,dp));
+                dp[x][y][op]=max(dp[x][y][op],dfs(x,i,0,arr,s,dp)*dfs(i+1,y,0,arr,s,dp));
+                dp[x][y][op]=max(dp[x][y][op],dfs(x,i,1,arr,s,dp)*dfs(i+1,y,1,arr,s,dp));
+            }
+        }
+    }
+    return dp[x][y][op];
+}
+
+void solve() {
+    int n; cin>>n;
+    vi arr(n); input(arr,n);
+    if(n==1) { cout<<arr[0]<<endl; return;}
+    string s; cin>>s;
+    vector<vector<vi>> dp(n,vector<vi>(n,vi(2,inf)));
+    // 3d dp -> n*n*(min,max)
+    cout<<dfs(0,n-1,1,arr,s,dp)<<endl;
+}
+
+int32_t main(){
+ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+// freopen("input.txt", "r", stdin);
+// freopen("output.txt", "w", stdout);
+    int t=1;
+    // cin >> t;
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
